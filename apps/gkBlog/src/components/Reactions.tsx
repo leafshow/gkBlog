@@ -97,24 +97,49 @@ function Reactions({
   // current active section
   const { currentSection } = useScrollSpy();
 
+  // 获取数据，添加空值检查
   const {
     isLoading,
-    data: {
-      meta: {
-        views,
-        shares,
-        reactions,
-        reactionsDetail: { THINKING, CLAPPING, AMAZED },
-      },
-      metaUser: { reactionsDetail: user },
-    },
+    data,
     addShare,
     addReaction,
   } = useInsight({ slug, contentType, contentTitle, countView: withCountView });
 
-  const CLAPPING_QUOTA = MAX_REACTIONS_PER_SESSION - user.CLAPPING;
-  const THINKING_QUOTA = MAX_REACTIONS_PER_SESSION - user.THINKING;
-  const AMAZED_QUOTA = MAX_REACTIONS_PER_SESSION - user.AMAZED;
+  // 安全地访问数据，提供默认值
+  const meta = data?.meta || {
+    views: 0,
+    shares: 0,
+    reactions: 0,
+    reactionsDetail: {
+      THINKING: 0,
+      CLAPPING: 0,
+      AMAZED: 0,
+    },
+  };
+
+  const metaUser = data?.metaUser || {
+    reactionsDetail: {
+      THINKING: 0,
+      CLAPPING: 0,
+      AMAZED: 0,
+    },
+  };
+
+  // 解构数据，确保属性存在
+  const {
+    views = 0,
+    shares = 0,
+    reactions = 0,
+    reactionsDetail: { THINKING = 0, CLAPPING = 0, AMAZED = 0 } = {},
+  } = meta;
+
+  const {
+    reactionsDetail: { THINKING: userThinking = 0, CLAPPING: userClapping = 0, AMAZED: userAmazed = 0 } = {},
+  } = metaUser;
+
+  const CLAPPING_QUOTA = MAX_REACTIONS_PER_SESSION - userClapping;
+  const THINKING_QUOTA = MAX_REACTIONS_PER_SESSION - userThinking;
+  const AMAZED_QUOTA = MAX_REACTIONS_PER_SESSION - userAmazed;
 
   const controls = useAnimationControls();
 
