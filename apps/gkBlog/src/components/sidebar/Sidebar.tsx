@@ -13,19 +13,6 @@ interface RecentArticle {
   url: string;
 }
 
-interface Comment {
-  id: string;
-  url: string;
-  nick: string;
-  mailMd5: string;
-  link: string;
-  comment: string;
-  commentText: string;
-  created: number;
-  avatar: string;
-  relativeTime: string;
-}
-
 interface IArticle {
   title: string;
   slug: string;
@@ -33,22 +20,6 @@ interface IArticle {
 
 interface SidebarProps {
   show: string[];
-}
-
-interface TwikooConfig {
-  envId: string;
-  el: string;
-  pageSize?: number;
-  includeReply?: boolean;
-}
-
-declare global {
-  interface Window {
-    twikoo: {
-      init: (config: TwikooConfig) => void;
-      getRecentComments: (config: TwikooConfig) => Promise<Comment[]>;
-    };
-  }
 }
 
 function Sidebar({ show }: SidebarProps) {

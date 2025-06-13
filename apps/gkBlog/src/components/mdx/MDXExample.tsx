@@ -39,7 +39,7 @@ export default function MDXExample({
               : "hover:text-primary-500 dark:hover:text-primary-300"
           )}
         >
-          Preview
+          样式预览
         </button>
         <button
           type="button"
@@ -52,7 +52,7 @@ export default function MDXExample({
               : "hover:text-primary-500 dark:hover:text-primary-300"
           )}
         >
-          Source
+          示例源码
         </button>
       </div>
 

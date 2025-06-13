@@ -5,6 +5,7 @@ interface TwikooConfig {
   el: string;
   pageSize?: number;
   includeReply?: boolean;
+  urls?: string[];
 }
 
 interface Comment {
