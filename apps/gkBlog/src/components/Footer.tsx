@@ -132,8 +132,8 @@ function FooterDescription() {
         关于我
       </div>
       <p className={clsx("mb-4 font-normal leading-relaxed")}>
-        我是 qlAD, 一名小小的 <strong>计算机爱好者</strong>{" "}
-        ，致力于探索能改变世界的代码。
+        我是 Liye, 一名小小的 <strong>电商从业者</strong>{" "}
+        ，喜欢捣鼓乱七八糟的新兴事物。
       </p>
       <ul className={clsx("-ml-2 flex gap-1")}>
         <li>
@@ -150,7 +150,7 @@ function FooterDescription() {
         </li>
         <li>
           <a
-            href="https://github.com/qlAD"
+            href="https://github.com/leafshow"
             target="_blank"
             rel="noreferrer nofollow"
             className={clsx("flex h-9 w-9 items-center justify-center")}
@@ -300,7 +300,7 @@ function Footer() {
                   rel="noopener noreferrer"
                   style={{ margin: "0 5px" }}
                 >
-                  陕ICP备2024050194号-1
+                  京ICP备2025000000号-1
                 </a>
               </span>
               <br />
@@ -318,7 +318,7 @@ function Footer() {
                   rel="noreferrer"
                   target="_blank"
                 >
-                  陕公网安备61072102000193
+                  京公网安备00000000000000
                 </a>
               </span>
             </div>
