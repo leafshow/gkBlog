@@ -45,13 +45,14 @@ git status
 git add .
 ```
 - 或仅添加特定文件
+```bash
 git add src/components/Reactions.tsx
-
+```
 ### 3. 提交修改
 ```bash
 - 将暂存区的修改提交到本地仓库：
 git commit -m "修复 Reactions 组件的空值引用错误"
-
+```
 提交信息 应简洁明了，描述此次修改的目的
 - 可以使用多行提交信息：
 git commit -m "修复 Reactions 组件的空值引用错误"
@@ -64,12 +65,13 @@ git log --oneline
 - 示例输出：
 - 1a2b3c4 (HEAD -> main) 修复首页布局问题，更新依赖版本
 - 5d6e7f8 初始化项目
-```
+
 ### 4. 拉取最新代码（重要！）
 ```bash
 - 在推送前，确保您的本地仓库是最新的：
 git pull origin main/git pull
-
+```
+```bash
 - 如果有冲突，需要解决冲突后再提交
 - 冲突解决后，再次提交：
 git add .
@@ -144,17 +146,19 @@ git reset --hard HEAD^
 ```
 
 ### 6.工作流建议
-1. **创建分支**：对于较大的修改，建议创建新分支：
+1. 创建分支：对于较大的修改，建议创建新分支：
 - 例如创建修复bug分支：
-   ```bash
-   git checkout -b fix-reactions-component
-   # 完成修改后
-   git push origin fix-reactions-component
-   ```
+```bash
+git checkout -b fix-reactions-component
+```
+- 完成修改后
+```bash
+git push origin fix-reactions-component
+```
 - 例如创建开发新页面分支：
- ```bash
+```bash
 git checkout -b feature/new-page
- ```
+```
 - 开发完成后合并
 ```bash
 git checkout main
@@ -181,17 +185,29 @@ git flow release start 1.0.0
 ```
 
 6. 定期拉取更新
-- 每天开始工作前
 ```bash
+- 每天开始工作前
 git pull origin main
 ```
 
 ### 7. 修改报错后回退
 
 - 可以回退到修改前的内容。因为已经执行了commit提交操作，所以需要将git仓库版本恢复到上一个版本，然后将暂存区域文件恢复到工作目录，可以按照以下步骤进行操作：
-1. 先使用git reset HEAD~命令，将版本回退到上一个版本，此时文件恢复到了暂存区域。
-2. 再执行git checkout -- apps/gkBlog/src/components/Footer.tsx，将暂存区域的文件恢复到工作目录，这样就可以将Footer.tsx文件回退到修改前的状态了。
-3. 另外，如果使用git reset命令回退版本后，还需要将本地的回退结果推送到远程仓库，可以使用git push -f命令，但要注意该操作可能会覆盖远程仓库的提交历史，使用时需谨慎。
+1. 先使用
+```bash
+git reset HEAD~
+```
+命令，将版本回退到上一个版本，此时文件恢复到了暂存区域。
+2. 再执行
+```bash
+git checkout -- apps/gkBlog/src/components/Footer.tsx
+```
+将暂存区域的文件恢复到工作目录，这样就可以将Footer.tsx文件回退到修改前的状态了。
+3. 另外，如果使用git reset命令回退版本后，还需要将本地的回退结果推送到远程仓库，可以使用
+```bash
+git push -f
+```
+命令，但要注意该操作可能会覆盖远程仓库的提交历史，使用时需谨慎。
 
 通过以上步骤，您的修改将被安全地同步到 GitHub，并自动触发 Vercel 的部署流程。
 
