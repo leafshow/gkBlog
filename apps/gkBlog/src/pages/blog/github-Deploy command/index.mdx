@@ -90,13 +90,13 @@ git push -u origin main
 2. 检查提交历史，确认您的修改已成功推送
 3. 查看 Vercel 自动部署状态，确认网站已更新
 
-### **常见问题解决**
-#### **1. 忘记配置 Git 用户信息**
+## **常见问题解决**
+### **1. 忘记配置 Git 用户信息**
 ```bash
 git config --global user.name "您的 GitHub 用户名"
 git config --global user.email "您的 GitHub 邮箱"
 ```
-#### **2. 权限问题**
+### **2. 权限问题**
 如果推送时提示权限错误，可能需要：
 ```bash
 # 使用 SSH 密钥（推荐）
@@ -104,20 +104,20 @@ git config --global user.email "您的 GitHub 邮箱"
 git remote set-url origin git@github.com:leafshow/gkBlog.git
 ```
 
-#### **3. 分支不同步**
+### **3. 分支不同步**
 如果本地分支落后于远程分支：
 ```bash
 git pull --rebase origin main
 ```
 
-#### **4. 认证失败：**
+### **4. 认证失败：**
 # 检查远程仓库URL
 git remote -v
 
 # 如果是HTTPS，切换到SSH
 git remote set-url origin git@github.com:username/repo.git
 
-#### **5. 冲突解决：**
+### **5. 冲突解决：**
 # 查看冲突文件
 git status
 
@@ -165,7 +165,7 @@ git flow release start 1.0.0
 # 每天开始工作前
 git pull origin main
 
-#### **6. 修改报错后，如何回退：**
+### **6. 修改报错后，如何回退：**
 
 # 可以回退到修改前的内容。因为已经执行了commit提交操作，所以需要将git仓库版本恢复到上一个版本，然后将暂存区域文件恢复到工作目录，可以按照以下步骤进行操作：
 1. 先使用git reset HEAD~命令，将版本回退到上一个版本，此时文件恢复到了暂存区域。
