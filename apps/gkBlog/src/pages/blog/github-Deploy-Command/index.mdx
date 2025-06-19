@@ -91,12 +91,13 @@ git push -u origin main
 - 2. 检查提交历史，确认您的修改已成功推送
 - 3. 查看 Vercel 自动部署状态，确认网站已更新
 
-## 常见问题解决：
+## 常见问题解决
 ### 1. 忘记配置Git用户信息
 ```bash
 git config --global user.name "您的 GitHub 用户名"
 git config --global user.email "您的 GitHub 邮箱"
 ```
+
 ### 2. 权限问题
 如果推送时提示权限错误，可能需要：
 ```bash
@@ -104,6 +105,7 @@ git config --global user.email "您的 GitHub 邮箱"
 - 或重新设置远程仓库 URL
 git remote set-url origin git@github.com:leafshow/gkBlog.git
 ```
+
 
 ### 3. 分支不同步
 如果本地分支落后于远程分支：
@@ -120,6 +122,7 @@ git remote -v
 ```bash
 git remote set-url origin git@github.com:username/repo.git
 ```
+
 ### 5. 冲突解决
 - 查看冲突文件
 ```bash
