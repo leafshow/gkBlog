@@ -26,7 +26,7 @@ import TIL from "@/components/mdx/TIL";
 
 当您在本地完成代码调试并确认修改无误后，可以按照以下步骤将更改推送到 GitHub。
 
-1. 检查修改状态
+### 1. 检查修改状态
 首先查看哪些文件被修改、添加或删除：
 ```bash
 git status
@@ -39,7 +39,7 @@ git status
 - modified:   package.json
 - modified:   src/App.tsx
 
-2. 添加修改到暂存区
+### 2. 添加修改到暂存区
 - 将您想要提交的文件添加到暂存区：
 ```bash
 git add .
@@ -47,7 +47,7 @@ git add .
 - 或仅添加特定文件
 git add src/components/Reactions.tsx
 
-3. 提交修改
+### 3. 提交修改
 ```bash
 - 将暂存区的修改提交到本地仓库：
 git commit -m "修复 Reactions 组件的空值引用错误"
@@ -65,7 +65,7 @@ git log --oneline
 - 1a2b3c4 (HEAD -> main) 修复首页布局问题，更新依赖版本
 - 5d6e7f8 初始化项目
 ```
-4. 拉取最新代码（重要！）
+### 4. 拉取最新代码（重要！）
 ```bash
 - 在推送前，确保您的本地仓库是最新的：
 git pull origin main/git pull
@@ -75,28 +75,29 @@ git pull origin main/git pull
 git add .
 git commit -m "解决与远程仓库的冲突"
 ```
-5. 推送修改到 GitHub
+### 5. 推送修改到 GitHub
 ```bash
 - 将本地提交推送到 GitHub 仓库：
 git push origin main
-
+```
 origin 是远程仓库的别名
 main 是要推送的分支名称（根据您的仓库可能是 `master`）
 - 如果是首次推送，可能需要设置上游分支
+```bash
 git push -u origin main
 ```
-6. 验证提交
+### 6. 验证提交
 - 1. 访问您的 GitHub 仓库页面
 - 2. 检查提交历史，确认您的修改已成功推送
 - 3. 查看 Vercel 自动部署状态，确认网站已更新
 
-## **常见问题解决**
-### **1. 忘记配置 Git 用户信息**
+## 常见问题解决：
+### 1. 忘记配置Git用户信息
 ```bash
 git config --global user.name "您的 GitHub 用户名"
 git config --global user.email "您的 GitHub 邮箱"
 ```
-### **2. 权限问题**
+### 2. 权限问题
 如果推送时提示权限错误，可能需要：
 ```bash
 - 使用 SSH 密钥（推荐）
@@ -104,36 +105,42 @@ git config --global user.email "您的 GitHub 邮箱"
 git remote set-url origin git@github.com:leafshow/gkBlog.git
 ```
 
-### **3. 分支不同步**
+### 3. 分支不同步
 如果本地分支落后于远程分支：
 ```bash
 git pull --rebase origin main
 ```
 
-### **4. 认证失败：**
+### 4. 认证失败
 - 检查远程仓库URL
+```bash
 git remote -v
-
+```
 - 如果是HTTPS，切换到SSH
+```bash
 git remote set-url origin git@github.com:username/repo.git
-
-### **5. 冲突解决：**
+```
+### 5. 冲突解决
 - 查看冲突文件
+```bash
 git status
-
+```
 - 手动编辑冲突文件，然后
+```bash
 git add .
 git commit
-
+```
 撤销上次提交：
 - 保留修改
+```bash
 git reset --soft HEAD^
-
+```
 - 不保留修改
+```bash
 git reset --hard HEAD^
+```
 
-
-### **工作流建议**
+### 6.工作流建议
 1. **创建分支**：对于较大的修改，建议创建新分支：
 - 例如创建修复bug分支：
    ```bash
@@ -142,30 +149,41 @@ git reset --hard HEAD^
    git push origin fix-reactions-component
    ```
 - 例如创建开发新页面分支：
+ ```bash
 git checkout -b feature/new-page
-
+ ```
 - 开发完成后合并
+```bash
 git checkout main
 git merge feature/new-page
+```
 
 - 例如创建新功能分支
+```bash
 git flow feature start new-feature
+```
 
-2. **Pull Request**：通过 GitHub 创建 Pull Request，进行代码审查后再合并到主分支
+2. Pull Request：通过 GitHub 创建 Pull Request，进行代码审查后再合并到主分支
 
-3. **持续集成**：配置 GitHub Actions 或 Vercel 的自动部署，确保每次提交都能触发构建和测试
+3. 持续集成：配置 GitHub Actions 或 Vercel 的自动部署，确保每次提交都能触发构建和测试
 
-4. **初始化**Git Flow
+4. 初始化Git Flow
+```bash
 git flow init
+```
 
-5. **发布版本**
+5. 发布版本
+```bash
 git flow release start 1.0.0
+```
 
-2. 定期拉取更新：
+6. 定期拉取更新
 - 每天开始工作前
+```bash
 git pull origin main
+```
 
-### **6. 修改报错后，如何回退：**
+### 7. 修改报错后回退
 
 - 可以回退到修改前的内容。因为已经执行了commit提交操作，所以需要将git仓库版本恢复到上一个版本，然后将暂存区域文件恢复到工作目录，可以按照以下步骤进行操作：
 1. 先使用git reset HEAD~命令，将版本回退到上一个版本，此时文件恢复到了暂存区域。
@@ -175,21 +193,26 @@ git pull origin main
 通过以上步骤，您的修改将被安全地同步到 GitHub，并自动触发 Vercel 的部署流程。
 
 - 查看项目根目录下的 apps 目录
+```bash
 ls -la gkBlog
-
+```
 - 查看 apps/gkBlog/src/pages 目录
+```bash
 ls -la apps/gkBlog/src/pages
-
+```
 - 查看 apps/gkBlog/src/pages/blog 目录
+```bash
 ls -la apps/gkBlog/src/pages/blog
-
+```
 
 - 检查配置路径是否存在
+```bash
 ls -la apps/gkBlog/src/pages/blog
+```
 - 输出应显示你的MDX文件目录结构
 
-终极解决方案
-如果以上步骤仍无法解决问题，建议：
+- 终极解决方案
+- 如果以上步骤仍无法解决问题，建议：
 
 1. 重置 TinaCMS 配置：
 
