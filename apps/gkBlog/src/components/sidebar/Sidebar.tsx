@@ -22,8 +22,8 @@ interface SidebarProps {
   show: string[];
 }
 
-function Sidebar({ show }: SidebarProps) {
-  const imageUrl = "https://cdn.qladgk.com/images/gongzhonghao.png";
+const Sidebar = ({ show }: SidebarProps) => {
+  const imageUrl = "https://boost.jpgcdn.com/c2.jpgcdn.com/2025/06/25/sEqF.png";
   const [recentArticles, setRecentArticles] = useState<RecentArticle[]>([]);
   const [tagsWithCount, setTagsWithCount] = useState<Record<string, number>>(
     {}
@@ -279,6 +279,6 @@ function Sidebar({ show }: SidebarProps) {
       )}
     </aside>
   );
-}
+};
 
 export default Sidebar;
