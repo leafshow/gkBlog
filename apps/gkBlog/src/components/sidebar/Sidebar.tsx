@@ -23,7 +23,7 @@ interface SidebarProps {
 }
 
 const Sidebar = ({ show }: SidebarProps) => {
-  const imageUrl = "https://boost.jpgcdn.com/c2.jpgcdn.com/2025/06/25/sEqF.png";
+  const imageUrl = "https://boost.jpgcdn.com/t3.jpgcdn.com/2025/06/25/sOVm.png";
   const [recentArticles, setRecentArticles] = useState<RecentArticle[]>([]);
   const [tagsWithCount, setTagsWithCount] = useState<Record<string, number>>(
     {}
