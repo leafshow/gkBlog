@@ -11,5 +11,8 @@
     "**/.next": true,
     "**/.turbo": true,
     "**/node_modules": true
+  },
+  "[snippets]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
   }
 }
