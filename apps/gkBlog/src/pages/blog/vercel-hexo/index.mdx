@@ -1,5 +1,5 @@
 ---
-title: "vercel部署hexo"
+title: "vercel部署hexo及热门插件"
 description: "hexo超完整的搭建教程，让你拥有一个专属个人博客"
 date: "2025-06-30"
 lang: zh
@@ -304,3 +304,79 @@ view domains
 
 2. 更改主题
    可以上hexo官网找到喜欢的主题，按照文档更改。
+
+---
+
+### 六、HEXO文件目录
+
+node_modules: 依赖包
+public：存放生成的页面
+scaffolds：生成文章的一些模板
+source：用来存放你的文章
+themes：主题
+\_config.yml: 博客的配置文件
+
+### 七、热门插件
+
+Hexo写日志，通常我们都需要维护一个front-matter信息，包括title、date。博客多了，为了方便日志分类，一般还需要设置categories。
+比如下面的例子：
+
+```bash
+title: Hexo简介
+date: 2008-08-08
+categories:
+- web开发
+- 前端
+- 博客框架
+```
+
+久而久之，就会发现很多问题：
+
+工作繁琐：大量的category是重复性工作
+容易出错：大小写和中英文目录有可能混杂。比如有个web目录，偶尔我们写成了Web，造成了目录树中冗余的节点。
+可维护性差：如果要更改目录树中的节点，就要手动更改每个日志的categories变量。
+本文介绍一种自动生成categories的插件 hexo-auto-category官方地址。
+
+自动生成 categories
+最常用的文件管理策略，就是利用文件系统目录结构(树形结构 directory-tree)。
+同样，为了便于管理大量的日志文件，采用目录结构是一种简便可行的方案。hexo-auto-category根据日志文件(Markdown)所在文件目录自动分类，即自动生成markdown的front-matter中的categories变量。
+
+示例:
+
+对于博客 source/\_post/web/framework/hexo.md，该插件会自动生成以下categories
+
+```bash
+categories:
+- web
+- framework
+```
+
+```bash
+$ npm install hexo-auto-category --save
+```
+
+配置:
+在站点根目录下的\_config.yml添加：
+
+```bash
+# Generate categories from directory-tree
+# Dependencies: https://github.com/xu-song/hexo-auto-category
+# depth: the depth of directory-tree you want to generate, should > 0  auto_category:
+enable: true
+depth:
+```
+
+编译 & 部署:
+
+```bash
+$ hexo clean && hexo g && hexo d|
+```
+
+高级配置:
+如果只想生成第一级目录分类，可以设置depth属性，比如：
+
+```bash
+auto_category:
+enable: true
+depth: 1
+```
