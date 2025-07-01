@@ -88,7 +88,7 @@ if($opencry==’1’){//开启接口
 $content = json_encode($arr,320);
 ```
 
-//新增代码开始
+<!-- 新增代码开始 -->
 
 ```bash
 $content = str_replace(‘[刷新时间]’, date(‘Y-m-d H:i:s’), $content);
@@ -100,7 +100,7 @@ $content = str_replace(‘[到期时间]’, $latime[‘endtime’] ? date(‘Y-
 $content = str_replace(‘[软件个数]’, count($list), $content); // 当前软件数量
 ```
 
-// 获取当天的开始时间和结束时间
+<!--  获取当天的开始时间和结束时间 -->
 
 ```bash
 $startTime = strtotime(date(‘Y-m-d 00:00:00’));
@@ -108,7 +108,7 @@ $startTime = strtotime(date(‘Y-m-d 00:00:00’));
 $endTime = strtotime(date(‘Y-m-d 23:59:59’));
 ```
 
-// 查询数据库中当天的数据数量
+<!--  查询数据库中当天的数据数量 -->
 
 ```bash
 $count = Db::table(‘fa_category’)
@@ -122,7 +122,7 @@ $count = Db::table(‘fa_category’)
 $content = str_replace(‘[更新数量]’, $count, $content);
 ```
 
-//新增代码结束
+<!-- 新增代码结束 -->
 
 ```bash
 $content = base64_encode($content);
@@ -306,10 +306,13 @@ add.html
 <div class="col-xs-12 col-sm-8">
 
     <input id="c-keywords" class="form-control" name="row[keywords]" type="text" value="">
-```
+
 
 </div>
+```
+
 将其修改：
+
 ```bash
 <label for="c-keywords" class="control-label col-xs-12 col-sm-2">软件说明</label>
 
@@ -319,9 +322,11 @@ add.html
 
 </div>
 ```
+
 修改文件
 edit.html
 找到代码：
+
 ```bash
 <label for="c-keywords" class="control-label col-xs-12 col-sm-2">
   软件说明
@@ -333,7 +338,9 @@ edit.html
 
 </div>
 ```
+
 将其修改：
+
 ```bash
 <label for="c-keywords" class="control-label col-xs-12 col-sm-2">
   软件说明
@@ -345,6 +352,7 @@ edit.html
 
 </div>
 ```
+
 将上述代码修改完成后保存即可
 © 版权声明
 © 2024 优享云博客. 保留所有权利。
