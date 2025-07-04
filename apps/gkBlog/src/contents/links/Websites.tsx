@@ -193,6 +193,14 @@ const Websites = [
     description: "借由他人 寻找自我",
     category: "技术",
   },
+  {
+    name: "旧絮",
+    url: "https://blog.ivil.top/",
+    preview: "https://cdn.qladgk.com/images/20250620120209977.png",
+    avatar: "https://cdn.qladgk.com/images/20250620120051593.png",
+    description: "记录生活",
+    category: "生活",
+  },
 ];
 
 export default Websites;
