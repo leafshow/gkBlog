@@ -33,24 +33,14 @@ declare global {
 function useTwikoo(options?: { envId?: string }) {
   const [recentComments, setRecentComments] = useState<Comment[]>([]);
   const [twikooLoaded, setTwikooLoaded] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const scriptLoadedRef = useRef(false);
 
   const envId = options?.envId || process.env.NEXT_PUBLIC_TWIKOO_ENVID;
 
-  // 验证 envId 配置
-  useEffect(() => {
-    if (!envId) {
-      const errorMsg =
-        "Twikoo envId is not configured. Please set NEXT_PUBLIC_TWIKOO_ENVID in your environment variables.";
-      setError(errorMsg);
-      console.error(errorMsg);
-    }
-  }, [envId]);
-
   // 加载 twikoo 脚本
   useEffect(() => {
-    if (scriptLoadedRef.current || !envId) {
+    if (scriptLoadedRef.current) {
+      // 始终返回一个空函数
       return () => {};
     }
     scriptLoadedRef.current = true;
@@ -64,12 +54,6 @@ function useTwikoo(options?: { envId?: string }) {
       setTwikooLoaded(true);
     };
 
-    script.onerror = () => {
-      const errorMsg = "Failed to load Twikoo script";
-      setError(errorMsg);
-      console.error(errorMsg);
-    };
-
     document.body.appendChild(script);
 
     return () => {
@@ -77,49 +61,20 @@ function useTwikoo(options?: { envId?: string }) {
         script.parentNode.removeChild(script);
       }
     };
-  }, [envId]);
+  }, []);
 
   // 初始化评论区
   const initTwikoo = (el: string) => {
-    if (error) {
-      console.error("Cannot initialize Twikoo due to previous errors");
-      return;
-    }
-
-    if (!envId) {
-      console.error("Twikoo envId is not configured");
-      return;
-    }
-
-    // 检查元素是否存在
-    const element = document.querySelector(el);
-    if (!element) {
-      console.error(`Element ${el} not found for Twikoo initialization`);
-      return;
-    }
-
     if (window.twikoo && twikooLoaded) {
       window.twikoo.init({
         envId,
         el,
       });
-    } else {
-      console.warn("Twikoo is not loaded yet, cannot initialize");
     }
   };
 
   // 获取最新评论
   const fetchRecentComments = async (pageSize = 3) => {
-    if (error) {
-      console.error("Cannot fetch comments due to previous errors");
-      return [];
-    }
-
-    if (!envId) {
-      console.error("Twikoo envId is not configured");
-      return [];
-    }
-
     if (window.twikoo && twikooLoaded) {
       try {
         const comments = await window.twikoo.getRecentComments({
@@ -131,12 +86,8 @@ function useTwikoo(options?: { envId?: string }) {
         setRecentComments(comments);
         return comments;
       } catch (e) {
-        const errorMsg = `Failed to fetch recent comments: ${e instanceof Error ? e.message : String(e)}`;
-        setError(errorMsg);
-        console.error(errorMsg);
+        // 可以处理错误
       }
-    } else {
-      console.warn("Twikoo is not loaded yet, cannot fetch comments");
     }
     return [];
   };
@@ -144,7 +95,6 @@ function useTwikoo(options?: { envId?: string }) {
   return {
     twikooLoaded,
     recentComments,
-    error,
     fetchRecentComments,
     initTwikoo,
   };
