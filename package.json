@@ -9,6 +9,9 @@
     "format": "prettier --write .",
     "start": "turbo run start"
   },
+  "engines": {
+    "node": "22.x"
+  },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.3.3",
     "@typescript-eslint/eslint-plugin": "6.12.0",
