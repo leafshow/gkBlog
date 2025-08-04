@@ -7,8 +7,7 @@
     "lint": "turbo run lint",
     "clean": "turbo run clean",
     "format": "prettier --write .",
-    "start": "turbo run start",
-    "preinstall": "npx ensure-node-version@1.0.0 22.x"
+    "start": "turbo run start"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.3.3",
