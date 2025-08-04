@@ -1,0 +1,7 @@
+{
+  "build": {
+    "node": "22.x"
+  },
+  "installCommand": "pnpm install",
+  "buildCommand": "pnpm run build"
+}
