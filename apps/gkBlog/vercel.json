@@ -1,0 +1,4 @@
+{
+  "installCommand": "curl -fsSL https://nodejs.org/dist/v22.7.0/node-v22.7.0-linux-x64.tar.xz | tar -xJf - && export PATH=$PWD/node-v22.7.0-linux-x64/bin:$PATH && node -v && pnpm install",
+  "buildCommand": "export PATH=$PWD/node-v22.7.0-linux-x64/bin:$PATH && pnpm run build"
+}
