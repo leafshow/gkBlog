@@ -6,9 +6,9 @@
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
-    "build": "tsup --env.NODE_ENV production",
     "dev": "tsup --watch",
-    "lint": "eslint src"
+    "lint": "eslint src",
+    "build": "tsup src/index.ts --env.NODE_ENV production"
   },
   "dependencies": {
     "rehype-katex": "^7.0.1",
