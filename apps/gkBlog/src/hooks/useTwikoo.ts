@@ -1,14 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 
-interface TwikooConfig {
-  envId: string;
-  el: string;
-  pageSize?: number;
-  includeReply?: boolean;
-  urls?: string[];
-}
-
-interface Comment {
+// 1. 导出 Comment 接口，确保其他文件可显式引用
+export interface Comment {
   id: string;
   url: string;
   nick: string;
@@ -21,16 +14,35 @@ interface Comment {
   relativeTime: string;
 }
 
+interface TwikooConfig {
+  envId: string;
+  el: string;
+  pageSize?: number;
+  includeReply?: boolean;
+  urls?: string[];
+}
+
+// 2. 定义函数返回类型接口，显式关联 Comment
+export interface UseTwikooReturn {
+  twikooLoaded: boolean;
+  recentComments: Comment[];
+  error: string | null;
+  fetchRecentComments: (pageSize?: number) => Promise<Comment[]>;
+  initTwikoo: (el: string) => void;
+}
+
 declare global {
   interface Window {
-    twikoo: {
+    twikoo?: {
+      // 添加可选标记，避免类型检查错误
       init: (config: TwikooConfig) => void;
       getRecentComments: (config: TwikooConfig) => Promise<Comment[]>;
     };
   }
 }
 
-function useTwikoo(options?: { envId?: string }) {
+// 3. 为函数添加显式返回类型注解
+function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
   const [recentComments, setRecentComments] = useState<Comment[]>([]);
   const [twikooLoaded, setTwikooLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
@@ -92,7 +104,7 @@ function useTwikoo(options?: { envId?: string }) {
     }
 
     // 检查元素是否存在
-    const element = document.querySelector(el);
+    const element = document.querySelector<HTMLElement>(el);
     if (!element) {
       console.error(`Element ${el} not found for Twikoo initialization`);
       return;
@@ -108,8 +120,8 @@ function useTwikoo(options?: { envId?: string }) {
     }
   };
 
-  // 获取最新评论
-  const fetchRecentComments = async (pageSize = 3) => {
+  // 4. 为异步方法添加显式返回类型
+  const fetchRecentComments = async (pageSize = 3): Promise<Comment[]> => {
     if (error) {
       console.error("Cannot fetch comments due to previous errors");
       return [];
