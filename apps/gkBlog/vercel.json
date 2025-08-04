@@ -1,4 +1,4 @@
 {
-  "installCommand": "curl -fsSL https://nodejs.org/dist/v22.6.0/node-v22.6.0-linux-x64.tar.gz | tar xzf - && mv node-v22.6.0-linux-x64 n22 && n22/bin/npm i -g pnpm@10.10.0 && export PNPM_IGNORE_ENGINES=true && n22/bin/pnpm i",
+  "installCommand": "curl -fsSL https://nodejs.org/dist/v22.6.0/node-v22.6.0-linux-x64.tar.gz | tar xzf - && mv node-v22.6.0-linux-x64 n22 && n22/bin/npm i -g pnpm@10.10.0 --prefix ./n22 && export PNPM_IGNORE_ENGINES=true && n22/bin/pnpm i",
   "buildCommand": "n22/bin/pnpm run build"
 }
