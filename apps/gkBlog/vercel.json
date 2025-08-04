@@ -1,4 +1,0 @@
-{
-  "installCommand": "npx node@22.x -p \"process.exit()\" && pnpm install",
-  "buildCommand": "npx node@22.x pnpm run build"
-}

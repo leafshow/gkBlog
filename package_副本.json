@@ -7,8 +7,7 @@
     "lint": "turbo run lint",
     "clean": "turbo run clean",
     "format": "prettier --write .",
-    "start": "turbo run start",
-    "preinstall": "npx ensure-node-version@1.0.0 22.x"
+    "start": "turbo run start"
   },
   "engines": {
     "node": "22.x"
@@ -30,5 +29,8 @@
     "turbo": "^2.5.2",
     "typescript": "5.8.3"
   },
-  "packageManager": "pnpm@10.10.0"
+  "packageManager": "pnpm@10.10.0",
+  "scripts": {
+    "preinstall": "npx ensure-node-version@1.0.0 22.x"  // 新增预安装脚本检查Node版本
+  }
 }
