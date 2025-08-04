@@ -40,3 +40,4 @@ sitemap.xml
 
 # prevent accidentally committing and pushing draft files/directories
 *((DRAFT))*
+.vercel
