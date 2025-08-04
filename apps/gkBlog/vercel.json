@@ -1,5 +1,5 @@
 {
   "installCommand": "npx node@22.x -p \"process.exit()\" && pnpm install",
   "buildCommand": "npx node@22.x ./node_modules/pnpm/bin/pnpm.cjs run build",
-  "outputDirectory": "dist" // 根据你的实际输出目录修改
+  "outputDirectory": "dist"
 }
