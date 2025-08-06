@@ -10,10 +10,7 @@ import PostPreview from "@/contents/blog/PostPreview";
 
 import type { TPostFrontMatter } from "@/types";
 
-const PINNED_POST = [
-  "how-i-built-my-blog";，
-  "Celebrity-Quotations";
-  ];
+const PINNED_POST = ["how-i-built-my-blog", "Celebrity-Quotations"];
 const POSTS_PER_PAGE = 10;
 
 export type BlogContentsProps = {
@@ -30,7 +27,7 @@ type TPostPreview = TPostFrontMatter & {
   cover?: string;
 };
 
-function BlogContents({ posts }: BlogContentsProps) {
+const BlogContents = ({ posts }: BlogContentsProps) => {
   const { data } = useContentMeta();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
@@ -242,6 +239,6 @@ function BlogContents({ posts }: BlogContentsProps) {
       </div>
     </div>
   );
-}
+};
 
 export default BlogContents;
