@@ -10,7 +10,10 @@ import PostPreview from "@/contents/blog/PostPreview";
 
 import type { TPostFrontMatter } from "@/types";
 
-const PINNED_POST = "how-i-built-my-blog";
+const PINNED_POST = [
+  "how-i-built-my-blog";，
+  "Celebrity-Quotations";
+  ];
 const POSTS_PER_PAGE = 10;
 
 export type BlogContentsProps = {
