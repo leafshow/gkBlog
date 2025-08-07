@@ -1,4 +1,4 @@
-import { ContentType, ShareType } from "@prisma/client"; // 从Prisma导入ShareType
+import { ContentType, ShareType } from "@prisma/client";
 import clsx from "clsx";
 import { m, useAnimationControls } from "framer-motion";
 import { useRouter } from "next/router";
@@ -15,9 +15,6 @@ import { MAX_REACTIONS_PER_SESSION } from "@/constants/app";
 
 import type { PropsWithChildren } from "react";
 
-// 移除自定义的ShareType定义，直接使用Prisma生成的类型
-
-// 反应详情的类型接口
 interface ReactionsDetail {
   THINKING: number;
   CLAPPING: number;
@@ -28,15 +25,63 @@ interface CounterProps {
   count: number;
 }
 
-function Counter({ count }: CounterProps) {
-  // 保持不变...
-}
+const Counter = ({ count }: CounterProps) => {
+  const controls = useAnimationControls();
+
+  useEffect(() => {
+    const startMotion = async () => {
+      await controls.start({
+        y: [-20, 0],
+        transition: {
+          duration: 0.18,
+        },
+      });
+    };
+
+    if (count !== 0) {
+      startMotion();
+    }
+  }, [count, controls]);
+
+  return count === 0 ? (
+    <span className={clsx("flex flex-col font-mono text-sm")}>
+      <span
+        className={clsx(
+          "flex h-5 items-center font-mono text-sm font-bold text-slate-600",
+          "dark:text-slate-300"
+        )}
+      >
+        0
+      </span>
+    </span>
+  ) : (
+    <m.span
+      className={clsx(
+        "flex flex-col font-mono text-sm font-bold text-slate-600",
+        "dark:text-slate-300"
+      )}
+      animate={controls}
+    >
+      <span className={clsx("flex h-5 items-center")}>&nbsp;</span>
+      <span className={clsx("flex h-5 items-center")}>{count}</span>
+      <span className={clsx("flex h-5 items-center")}>{count - 1}</span>
+    </m.span>
+  );
+};
 
 type ReactionCounterProps = PropsWithChildren<CounterProps>;
 
-function ReactionCounter({ count, children = null }: ReactionCounterProps) {
-  // 保持不变...
-}
+const ReactionCounter = ({ count, children = null }: ReactionCounterProps) => (
+  <div
+    className={clsx(
+      "relative flex h-6 items-center gap-1 overflow-hidden rounded-full bg-slate-200 py-1 px-2",
+      "dark:bg-[#1d263a]"
+    )}
+  >
+    {children}
+    <Counter count={count} />
+  </div>
+);
 
 export type ReactionsProps = {
   contentType: ContentType;
@@ -66,12 +111,68 @@ const Reactions = ({
     countView: withCountView,
   });
 
-  // 保持数据处理部分不变...
+  // 确保从data中正确提取元数据，并提供默认值
+  const meta = data?.meta || {
+    views: 0,
+    shares: 0,
+    reactions: 0,
+    reactionsDetail: defaultReactionsDetail,
+  };
 
-  // 使用Prisma的ShareType作为参数类型
+  // 显式声明并解构需要的变量
+  const {
+    views = 0,
+    shares = 0,
+    reactions = 0,
+    reactionsDetail = defaultReactionsDetail,
+  } = meta;
+
+  const metaUser = data?.metaUser || {
+    reactionsDetail: defaultReactionsDetail,
+  };
+
+  const { reactionsDetail: userReactionsDetail = defaultReactionsDetail } =
+    metaUser;
+
+  const { THINKING = 0, CLAPPING = 0, AMAZED = 0 } = reactionsDetail;
+
+  const {
+    THINKING: userThinking = 0,
+    CLAPPING: userClapping = 0,
+    AMAZED: userAmazed = 0,
+  } = userReactionsDetail;
+
+  const CLAPPING_QUOTA = MAX_REACTIONS_PER_SESSION - userClapping;
+  const THINKING_QUOTA = MAX_REACTIONS_PER_SESSION - userThinking;
+  const AMAZED_QUOTA = MAX_REACTIONS_PER_SESSION - userAmazed;
+
+  const controls = useAnimationControls();
+
+  useEffect(() => {
+    if (!isLoading) {
+      controls.start({
+        y: 0,
+        opacity: 1,
+        pointerEvents: "auto",
+        transition: {
+          delay: 0.24,
+          duration: 0.18,
+        },
+      });
+    }
+  }, [isLoading, controls]);
+
+  const handleAddReaction = (type: keyof ReactionsDetail) => {
+    if (typeof addReaction === "function" && currentSection) {
+      addReaction({ type, section: currentSection });
+    } else {
+      console.warn("无法添加反应：函数未定义或缺少章节信息");
+    }
+  };
+
   const handleAddShare = (type: ShareType) => {
     if (typeof addShare === "function") {
-      addShare({ type }); // 现在与Prisma枚举类型完全匹配
+      addShare({ type });
     } else {
       console.warn("无法添加分享：函数未定义");
     }
@@ -79,16 +180,65 @@ const Reactions = ({
 
   return (
     <m.div
-    // ...保持不变
+      className={clsx(
+        "border-divider-light pointer-events-auto relative flex items-center justify-between rounded-xl border p-4 ",
+        "dark:border-divider-dark"
+      )}
+      initial={{
+        y: 16,
+        opacity: 0,
+        pointerEvents: "none",
+      }}
+      animate={controls}
     >
-      {/* ...其他内容保持不变 */}
+      <div
+        className={clsx(
+          "absolute inset-0 rounded-xl bg-white/70 backdrop-blur",
+          "dark:bg-slate-900/80"
+        )}
+      />
+      <div className={clsx("flex items-center gap-4")}>
+        <div className={clsx("flex flex-col items-center gap-2")}>
+          <EmojiReaction
+            disabled={CLAPPING_QUOTA <= 0}
+            title="鼓掌"
+            defaultImage="/assets/emojis/clapping-hands.png"
+            animatedImage="/assets/emojis/clapping-hands-animated.png"
+            disabledImage="/assets/emojis/love-you-gesture.png"
+            onClick={() => handleAddReaction("CLAPPING")}
+          />
+          <ReactionCounter count={CLAPPING} />
+        </div>
+        <div className={clsx("flex flex-col items-center gap-2")}>
+          <EmojiReaction
+            disabled={AMAZED_QUOTA <= 0}
+            title="哇"
+            defaultImage="/assets/emojis/astonished-face.png"
+            animatedImage="/assets/emojis/astonished-face-animated.png"
+            disabledImage="/assets/emojis/star-struck.png"
+            onClick={() => handleAddReaction("AMAZED")}
+          />
+          <ReactionCounter count={AMAZED} />
+        </div>
+        <div className={clsx("flex flex-col items-center gap-2")}>
+          <EmojiReaction
+            disabled={THINKING_QUOTA <= 0}
+            title="疑惑"
+            defaultImage="/assets/emojis/face-with-monocle.png"
+            animatedImage="/assets/emojis/face-with-monocle-animated.png"
+            disabledImage="/assets/emojis/nerd-face.png"
+            onClick={() => handleAddReaction("THINKING")}
+          />
+          <ReactionCounter count={THINKING} />
+        </div>
+      </div>
       <div className={clsx("flex items-start gap-2")}>
         <div className={clsx("flex flex-col items-center gap-2")}>
+          {/* 现在views、shares和reactions都已正确定义 */}
           <InsightButton views={views} shares={shares} reactions={reactions} />
         </div>
         <div className={clsx("flex flex-col items-center gap-2")}>
           <ShareButton
-            // 确保传递给按钮的类型符合Prisma的ShareType
             onItemClick={(type: ShareType) => handleAddShare(type)}
           />
           <ReactionCounter count={shares} />
