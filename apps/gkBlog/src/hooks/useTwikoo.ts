@@ -29,6 +29,7 @@ export interface UseTwikooReturn {
   error: string | null;
   fetchRecentComments: (pageSize?: number) => Promise<Comment[]>;
   initTwikoo: (el: string) => void;
+  isLoadingScript: boolean; // 新增：同步状态类型
 }
 
 declare global {
@@ -46,6 +47,8 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
   const [recentComments, setRecentComments] = useState<Comment[]>([]);
   const [twikooLoaded, setTwikooLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  // 新增：定义isLoadingScript状态
+  const [isLoadingScript, setIsLoadingScript] = useState(false); // 关键修复
   const scriptLoadedRef = useRef(false);
 
   const envId = options?.envId || process.env.NEXT_PUBLIC_TWIKOO_ENVID;
@@ -193,6 +196,7 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
     error,
     fetchRecentComments,
     initTwikoo,
+    isLoadingScript, // 新增：返回加载状态
   };
 }
 
