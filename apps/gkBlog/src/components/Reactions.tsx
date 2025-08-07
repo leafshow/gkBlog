@@ -15,11 +15,18 @@ import { MAX_REACTIONS_PER_SESSION } from "@/constants/app";
 
 import type { PropsWithChildren } from "react";
 
+// 定义反应详情的类型接口，确保类型安全
+interface ReactionsDetail {
+  THINKING: number;
+  CLAPPING: number;
+  AMAZED: number;
+}
+
 interface CounterProps {
   count: number;
 }
 
-function Counter({ count }: CounterProps) {
+const Counter = ({ count }: CounterProps) => {
   const controls = useAnimationControls();
 
   useEffect(() => {
@@ -61,23 +68,21 @@ function Counter({ count }: CounterProps) {
       <span className={clsx("flex h-5 items-center")}>{count - 1}</span>
     </m.span>
   );
-}
+};
 
 type ReactionCounterProps = PropsWithChildren<CounterProps>;
 
-function ReactionCounter({ count, children = null }: ReactionCounterProps) {
-  return (
-    <div
-      className={clsx(
-        "relative flex h-6 items-center gap-1 overflow-hidden rounded-full bg-slate-200 py-1 px-2",
-        "dark:bg-[#1d263a]"
-      )}
-    >
-      {children}
-      <Counter count={count} />
-    </div>
-  );
-}
+const ReactionCounter = ({ count, children = null }: ReactionCounterProps) => (
+  <div
+    className={clsx(
+      "relative flex h-6 items-center gap-1 overflow-hidden rounded-full bg-slate-200 py-1 px-2",
+      "dark:bg-[#1d263a]"
+    )}
+  >
+    {children}
+    <Counter count={count} />
+  </div>
+);
 
 export type ReactionsProps = {
   contentType: ContentType;
@@ -85,36 +90,67 @@ export type ReactionsProps = {
   withCountView?: boolean;
 };
 
-function Reactions({
+// 定义默认的反应数据，确保永远有安全的初始值
+const defaultReactionsDetail: ReactionsDetail = {
+  THINKING: 0,
+  CLAPPING: 0,
+  AMAZED: 0,
+};
+
+const Reactions = ({
   contentType,
   contentTitle,
   withCountView = true,
-}: ReactionsProps) {
-  // currently, there is no way to get the 'slug' via a component property.
+}: ReactionsProps) => {
   const { pathname } = useRouter();
   const slug = pathname.split("/").reverse()[0];
-
-  // current active section
   const { currentSection } = useScrollSpy();
 
-  const {
-    isLoading,
-    data: {
-      meta: {
-        views,
-        shares,
-        reactions,
-        reactionsDetail: { THINKING, CLAPPING, AMAZED },
-      },
-      metaUser: { reactionsDetail: user },
-    },
-    addShare,
-    addReaction,
-  } = useInsight({ slug, contentType, contentTitle, countView: withCountView });
+  // 获取数据
+  const { isLoading, data, addShare, addReaction } = useInsight({
+    slug,
+    contentType,
+    contentTitle,
+    countView: withCountView,
+  });
 
-  const CLAPPING_QUOTA = MAX_REACTIONS_PER_SESSION - user.CLAPPING;
-  const THINKING_QUOTA = MAX_REACTIONS_PER_SESSION - user.THINKING;
-  const AMAZED_QUOTA = MAX_REACTIONS_PER_SESSION - user.AMAZED;
+  // 增强空值检查，提供完整的默认值
+  const meta = data?.meta || {
+    views: 0,
+    shares: 0,
+    reactions: 0,
+    reactionsDetail: defaultReactionsDetail,
+  };
+
+  const metaUser = data?.metaUser || {
+    reactionsDetail: defaultReactionsDetail,
+  };
+
+  // 从元数据中提取反应数据，确保每个属性都有默认值
+  const {
+    views = 0,
+    shares = 0,
+    reactions = 0,
+    reactionsDetail = defaultReactionsDetail,
+  } = meta;
+
+  // 从用户元数据中提取反应数据
+  const { reactionsDetail: userReactionsDetail = defaultReactionsDetail } =
+    metaUser;
+
+  // 解构反应数据，确保安全访问
+  const { THINKING = 0, CLAPPING = 0, AMAZED = 0 } = reactionsDetail;
+
+  const {
+    THINKING: userThinking = 0,
+    CLAPPING: userClapping = 0,
+    AMAZED: userAmazed = 0,
+  } = userReactionsDetail;
+
+  // 计算剩余可反应次数
+  const CLAPPING_QUOTA = MAX_REACTIONS_PER_SESSION - userClapping;
+  const THINKING_QUOTA = MAX_REACTIONS_PER_SESSION - userThinking;
+  const AMAZED_QUOTA = MAX_REACTIONS_PER_SESSION - userAmazed;
 
   const controls = useAnimationControls();
 
@@ -131,6 +167,24 @@ function Reactions({
       });
     }
   }, [isLoading, controls]);
+
+  // 在调用addReaction前检查函数是否存在
+  const handleAddReaction = (type: keyof ReactionsDetail) => {
+    if (typeof addReaction === "function" && currentSection) {
+      addReaction({ type, section: currentSection });
+    } else {
+      console.warn("无法添加反应：函数未定义或缺少章节信息");
+    }
+  };
+
+  // 在调用addShare前检查函数是否存在
+  const handleAddShare = (type: string) => {
+    if (typeof addShare === "function") {
+      addShare({ type });
+    } else {
+      console.warn("无法添加分享：函数未定义");
+    }
+  };
 
   return (
     <m.div
@@ -159,9 +213,7 @@ function Reactions({
             defaultImage="/assets/emojis/clapping-hands.png"
             animatedImage="/assets/emojis/clapping-hands-animated.png"
             disabledImage="/assets/emojis/love-you-gesture.png"
-            onClick={() => {
-              addReaction({ type: "CLAPPING", section: currentSection });
-            }}
+            onClick={() => handleAddReaction("CLAPPING")}
           />
           <ReactionCounter count={CLAPPING} />
         </div>
@@ -172,9 +224,7 @@ function Reactions({
             defaultImage="/assets/emojis/astonished-face.png"
             animatedImage="/assets/emojis/astonished-face-animated.png"
             disabledImage="/assets/emojis/star-struck.png"
-            onClick={() => {
-              addReaction({ type: "AMAZED", section: currentSection });
-            }}
+            onClick={() => handleAddReaction("AMAZED")}
           />
           <ReactionCounter count={AMAZED} />
         </div>
@@ -185,9 +235,7 @@ function Reactions({
             defaultImage="/assets/emojis/face-with-monocle.png"
             animatedImage="/assets/emojis/face-with-monocle-animated.png"
             disabledImage="/assets/emojis/nerd-face.png"
-            onClick={() => {
-              addReaction({ type: "THINKING", section: currentSection });
-            }}
+            onClick={() => handleAddReaction("THINKING")}
           />
           <ReactionCounter count={THINKING} />
         </div>
@@ -197,16 +245,12 @@ function Reactions({
           <InsightButton views={views} shares={shares} reactions={reactions} />
         </div>
         <div className={clsx("flex flex-col items-center gap-2")}>
-          <ShareButton
-            onItemClick={(type) => {
-              addShare({ type });
-            }}
-          />
+          <ShareButton onItemClick={(type) => handleAddShare(type)} />
           <ReactionCounter count={shares} />
         </div>
       </div>
     </m.div>
   );
-}
+};
 
 export default Reactions;
