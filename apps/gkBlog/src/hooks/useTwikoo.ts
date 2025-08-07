@@ -131,7 +131,8 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
       // 超时处理（10秒无响应视为失败）
       const timeoutTimer = setTimeout(() => {
         console.warn(`CDN加载超时: ${currentSource}`);
-        script.onerror?.();
+        // 修复：传入空事件对象
+        script.onerror?.(new Event("error"));
       }, 10000);
 
       // 清理超时计时器
