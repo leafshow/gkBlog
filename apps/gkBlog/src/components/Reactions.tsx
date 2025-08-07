@@ -15,6 +15,10 @@ import { MAX_REACTIONS_PER_SESSION } from "@/constants/app";
 
 import type { PropsWithChildren } from "react";
 
+<<<<<<< HEAD
+=======
+// 定义反应详情的类型接口，确保类型安全
+>>>>>>> parent of 7ff69b1 (优化Reactions组件，修复“点赞 / 反应” 功能相关组件)
 interface ReactionsDetail {
   THINKING: number;
   CLAPPING: number;
@@ -89,6 +93,7 @@ export type ReactionsProps = {
   withCountView?: boolean;
 };
 
+// 定义默认的反应数据，确保永远有安全的初始值
 const defaultReactionsDetail: ReactionsDetail = {
   THINKING: 0,
   CLAPPING: 0,
@@ -104,6 +109,7 @@ const Reactions = ({
   const slug = pathname.split("/").reverse()[0];
   const { currentSection } = useScrollSpy();
 
+  // 获取数据
   const { isLoading, data, addShare, addReaction } = useInsight({
     slug,
     contentType,
@@ -111,13 +117,18 @@ const Reactions = ({
     countView: withCountView,
   });
 
+<<<<<<< HEAD
   // 确保从data中正确提取元数据，并提供默认值
+=======
+  // 增强空值检查，提供完整的默认值
+>>>>>>> parent of 7ff69b1 (优化Reactions组件，修复“点赞 / 反应” 功能相关组件)
   const meta = data?.meta || {
     views: 0,
     shares: 0,
     reactions: 0,
     reactionsDetail: defaultReactionsDetail,
   };
+<<<<<<< HEAD
 
   // 显式声明并解构需要的变量
   const {
@@ -171,6 +182,66 @@ const Reactions = ({
   };
 
   const handleAddShare = (type: ShareType) => {
+=======
+
+  const metaUser = data?.metaUser || {
+    reactionsDetail: defaultReactionsDetail,
+  };
+
+  // 从元数据中提取反应数据，确保每个属性都有默认值
+  const {
+    views = 0,
+    shares = 0,
+    reactions = 0,
+    reactionsDetail = defaultReactionsDetail,
+  } = meta;
+
+  // 从用户元数据中提取反应数据
+  const { reactionsDetail: userReactionsDetail = defaultReactionsDetail } =
+    metaUser;
+
+  // 解构反应数据，确保安全访问
+  const { THINKING = 0, CLAPPING = 0, AMAZED = 0 } = reactionsDetail;
+
+  const {
+    THINKING: userThinking = 0,
+    CLAPPING: userClapping = 0,
+    AMAZED: userAmazed = 0,
+  } = userReactionsDetail;
+
+  // 计算剩余可反应次数
+  const CLAPPING_QUOTA = MAX_REACTIONS_PER_SESSION - userClapping;
+  const THINKING_QUOTA = MAX_REACTIONS_PER_SESSION - userThinking;
+  const AMAZED_QUOTA = MAX_REACTIONS_PER_SESSION - userAmazed;
+
+  const controls = useAnimationControls();
+
+  useEffect(() => {
+    if (!isLoading) {
+      controls.start({
+        y: 0,
+        opacity: 1,
+        pointerEvents: "auto",
+        transition: {
+          delay: 0.24,
+          duration: 0.18,
+        },
+      });
+    }
+  }, [isLoading, controls]);
+
+  // 在调用addReaction前检查函数是否存在
+  const handleAddReaction = (type: keyof ReactionsDetail) => {
+    if (typeof addReaction === "function" && currentSection) {
+      addReaction({ type, section: currentSection });
+    } else {
+      console.warn("无法添加反应：函数未定义或缺少章节信息");
+    }
+  };
+
+  // 在调用addShare前检查函数是否存在
+  const handleAddShare = (type: string) => {
+>>>>>>> parent of 7ff69b1 (优化Reactions组件，修复“点赞 / 反应” 功能相关组件)
     if (typeof addShare === "function") {
       addShare({ type });
     } else {
@@ -238,9 +309,13 @@ const Reactions = ({
           <InsightButton views={views} shares={shares} reactions={reactions} />
         </div>
         <div className={clsx("flex flex-col items-center gap-2")}>
+<<<<<<< HEAD
           <ShareButton
             onItemClick={(type: ShareType) => handleAddShare(type)}
           />
+=======
+          <ShareButton onItemClick={(type) => handleAddShare(type)} />
+>>>>>>> parent of 7ff69b1 (优化Reactions组件，修复“点赞 / 反应” 功能相关组件)
           <ReactionCounter count={shares} />
         </div>
       </div>
