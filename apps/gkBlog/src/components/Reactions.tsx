@@ -1,4 +1,4 @@
-import { ContentType } from "@prisma/client";
+import { ContentType, ShareType } from "@prisma/client"; // 从Prisma导入ShareType
 import clsx from "clsx";
 import { m, useAnimationControls } from "framer-motion";
 import { useRouter } from "next/router";
@@ -15,8 +15,7 @@ import { MAX_REACTIONS_PER_SESSION } from "@/constants/app";
 
 import type { PropsWithChildren } from "react";
 
-// 1. 定义分享类型（与useInsight中addShare期望的类型一致）
-export type ShareType = "twitter" | "facebook" | "linkedin" | "copy" | "other";
+// 移除自定义的ShareType定义，直接使用Prisma生成的类型
 
 // 反应详情的类型接口
 interface ReactionsDetail {
@@ -69,10 +68,10 @@ const Reactions = ({
 
   // 保持数据处理部分不变...
 
-  // 2. 修正handleAddShare的参数类型为ShareType
+  // 使用Prisma的ShareType作为参数类型
   const handleAddShare = (type: ShareType) => {
     if (typeof addShare === "function") {
-      addShare({ type }); // 现在类型匹配
+      addShare({ type }); // 现在与Prisma枚举类型完全匹配
     } else {
       console.warn("无法添加分享：函数未定义");
     }
@@ -89,7 +88,7 @@ const Reactions = ({
         </div>
         <div className={clsx("flex flex-col items-center gap-2")}>
           <ShareButton
-            // 3. 确保ShareButton的onItemClick传递正确的ShareType
+            // 确保传递给按钮的类型符合Prisma的ShareType
             onItemClick={(type: ShareType) => handleAddShare(type)}
           />
           <ReactionCounter count={shares} />
