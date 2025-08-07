@@ -62,30 +62,64 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
 
   // 加载 twikoo 脚本
   useEffect(() => {
+    // 如果已加载或缺少环境ID，直接返回
     if (scriptLoadedRef.current || !envId) {
-      return () => {};
+      return;
     }
+
     scriptLoadedRef.current = true;
+    setIsLoadingScript(true); // 新增：标记脚本开始加载
 
-    const script = document.createElement("script");
-    script.src =
-      "https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.min.js";
-    script.async = true;
+    const maxRetries = 3; // 最大重试次数
+    let retries = 0;
+    let script: HTMLScriptElement;
 
-    script.onload = () => {
-      setTwikooLoaded(true);
+    // 提取加载逻辑为独立函数，便于重试
+    const loadScript = () => {
+      // 清除之前可能存在的脚本
+      if (script && script.parentNode) {
+        script.parentNode.removeChild(script);
+      }
+
+      script = document.createElement("script");
+      script.src =
+        "https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.min.js";
+      script.async = true;
+      script.crossOrigin = "anonymous"; // 允许跨域资源共享，增强兼容性
+
+      script.onload = () => {
+        setIsLoadingScript(false);
+        setTwikooLoaded(true);
+        setError(null); // 清除可能存在的错误状态
+      };
+
+      script.onerror = () => {
+        retries++;
+        if (retries < maxRetries) {
+          // 指数退避策略：1s, 2s, 4s...
+          const delay = 1000 * Math.pow(2, retries - 1);
+          console.warn(
+            `Twikoo脚本加载失败，将在 ${delay}ms 后重试（${retries}/${maxRetries}）`
+          );
+          setTimeout(loadScript, delay);
+        } else {
+          const errorMsg = `Twikoo脚本加载失败，已达到最大重试次数（${maxRetries}次）`;
+          setError(errorMsg);
+          setIsLoadingScript(false);
+          console.error(errorMsg);
+        }
+      };
+
+      document.body.appendChild(script);
     };
 
-    script.onerror = () => {
-      const errorMsg = "Failed to load Twikoo script";
-      setError(errorMsg);
-      console.error(errorMsg);
-    };
+    // 开始加载脚本
+    loadScript();
 
-    document.body.appendChild(script);
-
+    // 清理函数：组件卸载时移除脚本
     return () => {
-      if (script.parentNode) {
+      setIsLoadingScript(false);
+      if (script && script.parentNode) {
         script.parentNode.removeChild(script);
       }
     };
