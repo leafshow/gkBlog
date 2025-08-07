@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-// 1. 导出 Comment 接口，确保其他文件可显式引用
+// 导出 Comment 接口
 export interface Comment {
   id: string;
   url: string;
@@ -22,34 +22,40 @@ interface TwikooConfig {
   urls?: string[];
 }
 
-// 2. 定义函数返回类型接口，显式关联 Comment
+// 函数返回类型接口
 export interface UseTwikooReturn {
   twikooLoaded: boolean;
   recentComments: Comment[];
   error: string | null;
   fetchRecentComments: (pageSize?: number) => Promise<Comment[]>;
   initTwikoo: (el: string) => void;
-  isLoadingScript: boolean; // 新增：同步状态类型
+  isLoadingScript: boolean;
 }
 
 declare global {
   interface Window {
     twikoo?: {
-      // 添加可选标记，避免类型检查错误
       init: (config: TwikooConfig) => void;
       getRecentComments: (config: TwikooConfig) => Promise<Comment[]>;
     };
   }
 }
 
-// 3. 为函数添加显式返回类型注解
+// 多CDN源配置（优先国内稳定源）
+const TWIKOO_SOURCES = [
+  "https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/twikoo/1.6.39/twikoo.min.js", // 字节跳动CDN
+  "https://cdn.staticfile.org/twikoo/1.6.39/twikoo.min.js", // 腾讯云CDN
+  "https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.min.js", // 国外备用CDN
+  "https://unpkg.com/twikoo@1.6.39/dist/twikoo.min.js", // unpkg备用
+];
+
 function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
   const [recentComments, setRecentComments] = useState<Comment[]>([]);
   const [twikooLoaded, setTwikooLoaded] = useState(false);
   const [error, setError] = useState<string | null>(null);
-  // 新增：定义isLoadingScript状态
-  const [isLoadingScript, setIsLoadingScript] = useState(false); // 关键修复
+  const [isLoadingScript, setIsLoadingScript] = useState(false);
   const scriptLoadedRef = useRef(false);
+  const currentSourceIndex = useRef(0); // 跟踪当前尝试的源索引
 
   const envId = options?.envId || process.env.NEXT_PUBLIC_TWIKOO_ENVID;
 
@@ -63,63 +69,86 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
     }
   }, [envId]);
 
-  // 加载 twikoo 脚本
+  // 加载 twikoo 脚本（多源轮询+重试）
   useEffect(() => {
-    // 如果已加载或缺少环境ID，直接返回
-    if (scriptLoadedRef.current || !envId) {
-      return;
-    }
+    if (scriptLoadedRef.current || !envId) return;
 
     scriptLoadedRef.current = true;
-    setIsLoadingScript(true); // 新增：标记脚本开始加载
+    setIsLoadingScript(true);
 
-    const maxRetries = 3; // 最大重试次数
-    let retries = 0;
+    const maxRetries = 3; // 整体重试轮次（每轮尝试所有源）
+    let retryRound = 0;
     let script: HTMLScriptElement;
 
-    // 提取加载逻辑为独立函数，便于重试
-    const loadScript = () => {
-      // 清除之前可能存在的脚本
+    // 加载单个源
+    const loadFromSource = (sourceIndex: number) => {
+      // 清除之前的脚本
       if (script && script.parentNode) {
         script.parentNode.removeChild(script);
       }
 
-      script = document.createElement("script");
-      script.src =
-        "https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.min.js";
-      script.async = true;
-      script.crossOrigin = "anonymous"; // 允许跨域资源共享，增强兼容性
-
-      script.onload = () => {
-        setIsLoadingScript(false);
-        setTwikooLoaded(true);
-        setError(null); // 清除可能存在的错误状态
-      };
-
-      script.onerror = () => {
-        retries++;
-        if (retries < maxRetries) {
-          // 指数退避策略：1s, 2s, 4s...
-          const delay = 1000 * Math.pow(2, retries - 1);
+      // 边界检查
+      if (sourceIndex >= TWIKOO_SOURCES.length) {
+        retryRound++;
+        if (retryRound < maxRetries) {
+          const delay = 1000 * Math.pow(2, retryRound - 1); // 指数退避
           console.warn(
-            `Twikoo脚本加载失败，将在 ${delay}ms 后重试（${retries}/${maxRetries}）`
+            `所有CDN源尝试失败，将在 ${delay}ms 后进行第 ${retryRound + 1} 轮重试`
           );
-          setTimeout(loadScript, delay);
+          setTimeout(() => loadFromSource(0), delay);
         } else {
-          const errorMsg = `Twikoo脚本加载失败，已达到最大重试次数（${maxRetries}次）`;
+          const errorMsg = `Twikoo脚本加载失败，已达到最大重试轮次（${maxRetries}轮）`;
           setError(errorMsg);
           setIsLoadingScript(false);
           console.error(errorMsg);
         }
+        return;
+      }
+
+      const currentSource = TWIKOO_SOURCES[sourceIndex];
+      console.log(`尝试从CDN加载: ${currentSource}`);
+
+      script = document.createElement("script");
+      script.src = currentSource;
+      script.async = true;
+      script.crossOrigin = "anonymous";
+
+      script.onload = () => {
+        console.log(`CDN加载成功: ${currentSource}`);
+        setIsLoadingScript(false);
+        setTwikooLoaded(true);
+        setError(null);
+      };
+
+      script.onerror = () => {
+        console.warn(
+          `CDN加载失败: ${currentSource}（${sourceIndex + 1}/${TWIKOO_SOURCES.length}）`
+        );
+        // 尝试下一个源
+        loadFromSource(sourceIndex + 1);
+      };
+
+      // 超时处理（10秒无响应视为失败）
+      const timeoutTimer = setTimeout(() => {
+        console.warn(`CDN加载超时: ${currentSource}`);
+        script.onerror?.();
+      }, 10000);
+
+      // 清理超时计时器
+      script.onload = () => {
+        clearTimeout(timeoutTimer);
+        setIsLoadingScript(false);
+        setTwikooLoaded(true);
+        setError(null);
       };
 
       document.body.appendChild(script);
     };
 
-    // 开始加载脚本
-    loadScript();
+    // 开始加载（从第一个源开始）
+    loadFromSource(0);
 
-    // 清理函数：组件卸载时移除脚本
+    // 组件卸载时清理
     return () => {
       setIsLoadingScript(false);
       if (script && script.parentNode) {
@@ -140,7 +169,6 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
       return;
     }
 
-    // 检查元素是否存在
     const element = document.querySelector<HTMLElement>(el);
     if (!element) {
       console.error(`Element ${el} not found for Twikoo initialization`);
@@ -157,7 +185,7 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
     }
   };
 
-  // 4. 为异步方法添加显式返回类型
+  // 获取最新评论
   const fetchRecentComments = async (pageSize = 3): Promise<Comment[]> => {
     if (error) {
       console.error("Cannot fetch comments due to previous errors");
@@ -196,7 +224,7 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
     error,
     fetchRecentComments,
     initTwikoo,
-    isLoadingScript, // 新增：返回加载状态
+    isLoadingScript,
   };
 }
 
