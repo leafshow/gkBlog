@@ -16,6 +16,7 @@ import { MAX_REACTIONS_PER_SESSION } from "@/constants/app";
 import type { PropsWithChildren } from "react";
 
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 // 定义反应详情的类型接口，确保类型安全
 >>>>>>> parent of 7ff69b1 (优化Reactions组件，修复“点赞 / 反应” 功能相关组件)
@@ -25,11 +26,13 @@ interface ReactionsDetail {
   AMAZED: number;
 }
 
+=======
+>>>>>>> parent of 16aa789 (优化Reactions组件 修复“点赞 / 反应” 功能相关组件)
 interface CounterProps {
   count: number;
 }
 
-const Counter = ({ count }: CounterProps) => {
+function Counter({ count }: CounterProps) {
   const controls = useAnimationControls();
 
   useEffect(() => {
@@ -52,7 +55,7 @@ const Counter = ({ count }: CounterProps) => {
       <span
         className={clsx(
           "flex h-5 items-center font-mono text-sm font-bold text-slate-600",
-          "dark:text-slate-300"
+          "dark:text-slate-300",
         )}
       >
         0
@@ -62,7 +65,7 @@ const Counter = ({ count }: CounterProps) => {
     <m.span
       className={clsx(
         "flex flex-col font-mono text-sm font-bold text-slate-600",
-        "dark:text-slate-300"
+        "dark:text-slate-300",
       )}
       animate={controls}
     >
@@ -71,21 +74,23 @@ const Counter = ({ count }: CounterProps) => {
       <span className={clsx("flex h-5 items-center")}>{count - 1}</span>
     </m.span>
   );
-};
+}
 
 type ReactionCounterProps = PropsWithChildren<CounterProps>;
 
-const ReactionCounter = ({ count, children = null }: ReactionCounterProps) => (
-  <div
-    className={clsx(
-      "relative flex h-6 items-center gap-1 overflow-hidden rounded-full bg-slate-200 py-1 px-2",
-      "dark:bg-[#1d263a]"
-    )}
-  >
-    {children}
-    <Counter count={count} />
-  </div>
-);
+function ReactionCounter({ count, children = null }: ReactionCounterProps) {
+  return (
+    <div
+      className={clsx(
+        "relative flex h-6 items-center gap-1 overflow-hidden rounded-full bg-slate-200 py-1 px-2",
+        "dark:bg-[#1d263a]",
+      )}
+    >
+      {children}
+      <Counter count={count} />
+    </div>
+  );
+}
 
 export type ReactionsProps = {
   contentType: ContentType;
@@ -93,40 +98,44 @@ export type ReactionsProps = {
   withCountView?: boolean;
 };
 
-// 定义默认的反应数据，确保永远有安全的初始值
-const defaultReactionsDetail: ReactionsDetail = {
-  THINKING: 0,
-  CLAPPING: 0,
-  AMAZED: 0,
-};
-
-const Reactions = ({
+function Reactions({
   contentType,
   contentTitle,
   withCountView = true,
-}: ReactionsProps) => {
+}: ReactionsProps) {
+  // currently, there is no way to get the 'slug' via a component property.
   const { pathname } = useRouter();
   const slug = pathname.split("/").reverse()[0];
+
+  // current active section
   const { currentSection } = useScrollSpy();
 
-  // 获取数据
-  const { isLoading, data, addShare, addReaction } = useInsight({
-    slug,
-    contentType,
-    contentTitle,
-    countView: withCountView,
-  });
+  // 获取数据，添加空值检查
+  const {
+    isLoading,
+    data,
+    addShare,
+    addReaction,
+  } = useInsight({ slug, contentType, contentTitle, countView: withCountView });
 
+<<<<<<< HEAD
 <<<<<<< HEAD
   // 确保从data中正确提取元数据，并提供默认值
 =======
   // 增强空值检查，提供完整的默认值
 >>>>>>> parent of 7ff69b1 (优化Reactions组件，修复“点赞 / 反应” 功能相关组件)
+=======
+  // 安全地访问数据，提供默认值
+>>>>>>> parent of 16aa789 (优化Reactions组件 修复“点赞 / 反应” 功能相关组件)
   const meta = data?.meta || {
     views: 0,
     shares: 0,
     reactions: 0,
-    reactionsDetail: defaultReactionsDetail,
+    reactionsDetail: {
+      THINKING: 0,
+      CLAPPING: 0,
+      AMAZED: 0,
+    },
   };
 <<<<<<< HEAD
 
@@ -185,31 +194,25 @@ const Reactions = ({
 =======
 
   const metaUser = data?.metaUser || {
-    reactionsDetail: defaultReactionsDetail,
+    reactionsDetail: {
+      THINKING: 0,
+      CLAPPING: 0,
+      AMAZED: 0,
+    },
   };
 
-  // 从元数据中提取反应数据，确保每个属性都有默认值
+  // 解构数据，确保属性存在
   const {
     views = 0,
     shares = 0,
     reactions = 0,
-    reactionsDetail = defaultReactionsDetail,
+    reactionsDetail: { THINKING = 0, CLAPPING = 0, AMAZED = 0 } = {},
   } = meta;
 
-  // 从用户元数据中提取反应数据
-  const { reactionsDetail: userReactionsDetail = defaultReactionsDetail } =
-    metaUser;
-
-  // 解构反应数据，确保安全访问
-  const { THINKING = 0, CLAPPING = 0, AMAZED = 0 } = reactionsDetail;
-
   const {
-    THINKING: userThinking = 0,
-    CLAPPING: userClapping = 0,
-    AMAZED: userAmazed = 0,
-  } = userReactionsDetail;
+    reactionsDetail: { THINKING: userThinking = 0, CLAPPING: userClapping = 0, AMAZED: userAmazed = 0 } = {},
+  } = metaUser;
 
-  // 计算剩余可反应次数
   const CLAPPING_QUOTA = MAX_REACTIONS_PER_SESSION - userClapping;
   const THINKING_QUOTA = MAX_REACTIONS_PER_SESSION - userThinking;
   const AMAZED_QUOTA = MAX_REACTIONS_PER_SESSION - userAmazed;
@@ -230,6 +233,7 @@ const Reactions = ({
     }
   }, [isLoading, controls]);
 
+<<<<<<< HEAD
   // 在调用addReaction前检查函数是否存在
   const handleAddReaction = (type: keyof ReactionsDetail) => {
     if (typeof addReaction === "function" && currentSection) {
@@ -249,11 +253,13 @@ const Reactions = ({
     }
   };
 
+=======
+>>>>>>> parent of 16aa789 (优化Reactions组件 修复“点赞 / 反应” 功能相关组件)
   return (
     <m.div
       className={clsx(
         "border-divider-light pointer-events-auto relative flex items-center justify-between rounded-xl border p-4 ",
-        "dark:border-divider-dark"
+        "dark:border-divider-dark",
       )}
       initial={{
         y: 16,
@@ -265,7 +271,7 @@ const Reactions = ({
       <div
         className={clsx(
           "absolute inset-0 rounded-xl bg-white/70 backdrop-blur",
-          "dark:bg-slate-900/80"
+          "dark:bg-slate-900/80",
         )}
       />
       <div className={clsx("flex items-center gap-4")}>
@@ -276,7 +282,9 @@ const Reactions = ({
             defaultImage="/assets/emojis/clapping-hands.png"
             animatedImage="/assets/emojis/clapping-hands-animated.png"
             disabledImage="/assets/emojis/love-you-gesture.png"
-            onClick={() => handleAddReaction("CLAPPING")}
+            onClick={() => {
+              addReaction({ type: "CLAPPING", section: currentSection });
+            }}
           />
           <ReactionCounter count={CLAPPING} />
         </div>
@@ -287,7 +295,9 @@ const Reactions = ({
             defaultImage="/assets/emojis/astonished-face.png"
             animatedImage="/assets/emojis/astonished-face-animated.png"
             disabledImage="/assets/emojis/star-struck.png"
-            onClick={() => handleAddReaction("AMAZED")}
+            onClick={() => {
+              addReaction({ type: "AMAZED", section: currentSection });
+            }}
           />
           <ReactionCounter count={AMAZED} />
         </div>
@@ -298,7 +308,9 @@ const Reactions = ({
             defaultImage="/assets/emojis/face-with-monocle.png"
             animatedImage="/assets/emojis/face-with-monocle-animated.png"
             disabledImage="/assets/emojis/nerd-face.png"
-            onClick={() => handleAddReaction("THINKING")}
+            onClick={() => {
+              addReaction({ type: "THINKING", section: currentSection });
+            }}
           />
           <ReactionCounter count={THINKING} />
         </div>
@@ -310,17 +322,25 @@ const Reactions = ({
         </div>
         <div className={clsx("flex flex-col items-center gap-2")}>
 <<<<<<< HEAD
+<<<<<<< HEAD
           <ShareButton
             onItemClick={(type: ShareType) => handleAddShare(type)}
           />
 =======
           <ShareButton onItemClick={(type) => handleAddShare(type)} />
 >>>>>>> parent of 7ff69b1 (优化Reactions组件，修复“点赞 / 反应” 功能相关组件)
+=======
+          <ShareButton
+            onItemClick={(type) => {
+              addShare({ type });
+            }}
+          />
+>>>>>>> parent of 16aa789 (优化Reactions组件 修复“点赞 / 反应” 功能相关组件)
           <ReactionCounter count={shares} />
         </div>
       </div>
     </m.div>
   );
-};
+}
 
 export default Reactions;
