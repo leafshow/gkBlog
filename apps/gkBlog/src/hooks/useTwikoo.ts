@@ -43,8 +43,6 @@ declare global {
 
 // 多CDN源配置（优先国内稳定源）
 const TWIKOO_SOURCES = [
-  "https://lf9-cdn-tos.bytecdntp.com/cdn/expire-1-M/twikoo/1.6.39/twikoo.min.js", // 字节跳动CDN
-  "https://cdn.staticfile.org/twikoo/1.6.39/twikoo.min.js", // 腾讯云CDN
   "https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.min.js", // 国外备用CDN
   "https://unpkg.com/twikoo@1.6.39/dist/twikoo.min.js", // unpkg备用
 ];
