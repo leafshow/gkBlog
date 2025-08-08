@@ -188,7 +188,8 @@
   text-rendering: auto;
 }
 .katex * {
-  -ms-high-contrast-adjust: none !important;
+  -ms-high-contrast-adjust: none !important; /* 旧属性，兼容旧浏览器 */
+  forced-color-adjust: none !important;     /* 标准属性，现代浏览器使用 */
   border-color: currentColor;
 }
 .katex .katex-version:after {
