@@ -17,10 +17,11 @@ const TwikooComments = () => {
 
     setInitializationStatus("loading");
     
-    // 直接使用 ref 引用的元素，更可靠
+    // 检查元素是否存在
     if (commentContainerRef.current) {
       try {
-        initTwikoo(commentContainerRef.current);
+        // 传入元素ID选择器而非DOM元素，匹配initTwikoo的参数要求
+        initTwikoo("#tcomment");
         setInitializationStatus("success");
         setErrorMessage(null);
       } catch (error) {
@@ -79,7 +80,7 @@ const TwikooComments = () => {
 
   return (
     <form className="twikoo-form" onSubmit={(e) => e.preventDefault()}>
-      {/* 评论容器 - 主要通过 ref 引用 */}
+      {/* 评论容器 - 确保ID为"tcomment" */}
       <div
         id="tcomment"
         ref={commentContainerRef}
