@@ -43,8 +43,8 @@ declare global {
 
 // 多CDN源配置（优先国内稳定源）
 const TWIKOO_SOURCES = [
-  "https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.min.js", // 国外备用CDN
   "https://unpkg.com/twikoo@1.6.39/dist/twikoo.min.js", // unpkg备用
+  "https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.min.js", // 国外备用CDN
 ];
 
 function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
