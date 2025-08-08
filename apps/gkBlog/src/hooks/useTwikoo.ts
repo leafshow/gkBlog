@@ -43,6 +43,7 @@ declare global {
 
 // 多CDN源配置（优先国内稳定源）
 const TWIKOO_SOURCES = [
+  "public/assets/js/twikoo.min.js", // 相对路径根据实际存放位置调整
   "https://unpkg.com/twikoo@1.6.39/dist/twikoo.min.js", // unpkg备用
   "https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.min.js", // 国外备用CDN
 ];
