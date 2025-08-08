@@ -20,14 +20,6 @@ interface CommentType {
   relativeTime: string;
 }
 
-// 定义API响应类型
-interface GetRecentCommentsResult {
-  data: CommentType[];
-  total: number;
-  page: number;
-  pageSize: number;
-}
-
 const PAGE_SIZE = 50;
 const FETCH_INTERVAL = 5 * 60 * 1000;
 const BARRAGE_URL = "/feedback";
@@ -69,8 +61,8 @@ function MessagesContents() {
         throw new Error("Twikoo 未正确加载，请稍后重试");
       }
 
-      // 调用API获取评论
-      const result: GetRecentCommentsResult = await window.twikoo.getRecentComments({
+      // 调用API获取评论 - 修正类型定义，实际返回的是CommentType数组
+      const recentComments: CommentType[] = await window.twikoo.getRecentComments({
         envId,
         urls: [BARRAGE_URL],
         pageSize: PAGE_SIZE,
@@ -79,8 +71,8 @@ function MessagesContents() {
       });
 
       // 验证返回数据
-      if (result?.data && Array.isArray(result.data)) {
-        const validComments = result.data.filter(isValidComment);
+      if (Array.isArray(recentComments)) {
+        const validComments = recentComments.filter(isValidComment);
         // 按时间排序，最新的在前
         validComments.sort((a, b) => b.created - a.created);
         setComments(validComments);
