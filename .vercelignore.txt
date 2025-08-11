@@ -1,0 +1,5 @@
+# 新增以下内容到 .vercelignore
+.turbo/
+apps/*/.next/cache/
+node_modules/turbo-*/
+.git/objects/pack/  # Git 大对象缓存（可选，若仍超限再删除）

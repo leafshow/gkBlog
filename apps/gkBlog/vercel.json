@@ -1,0 +1,8 @@
+{
+  "rootDirectory": "apps/gkBlog", // 关键：指定 Next.js 应用所在目录
+  "installCommand": "pnpm install", // 使用 pnpm 安装工作区依赖
+  "buildCommand": "pnpm build --filter gkBlog", // 仅构建子项目
+  "outputDirectory": "apps/gkBlog/.next", // 指定构建输出目录
+  "nodeVersion": "20.x",
+  "packageManager": "pnpm@10.10.0" // 匹配本地使用的 pnpm 版本
+}
