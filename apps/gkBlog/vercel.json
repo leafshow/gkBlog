@@ -1,5 +1,4 @@
 {
-  "directory": "apps/gkBlog",
   "installCommand": "pnpm install",
   "buildCommand": "pnpm build --filter gkBlog",
   "outputDirectory": ".next",
