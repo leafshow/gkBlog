@@ -1,8 +1,8 @@
 {
-  "rootDirectory": "apps/gkBlog",
+  "directory": "apps/gkBlog",
   "installCommand": "pnpm install",
   "buildCommand": "pnpm build --filter gkBlog",
-  "outputDirectory": "apps/gkBlog/.next",
+  "outputDirectory": ".next",
   "nodeVersion": "20.x",
   "packageManager": "pnpm@10.10.0"
 }
