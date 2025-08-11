@@ -113,6 +113,7 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
       script.crossOrigin = "anonymous";
 
       script.onload = () => {
+        clearTimeout(timeoutTimer); // 合并清理逻辑
         console.log(`CDN加载成功: ${currentSource}`);
         setIsLoadingScript(false);
         setTwikooLoaded(true);
