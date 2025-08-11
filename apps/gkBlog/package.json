@@ -77,5 +77,8 @@
     "tailwindcss": "^3.4.17",
     "tsconfig": "workspace:*",
     "typescript": "^5.8.3"
+  },
+  "engines": {
+    "node": ">=20.11.0"
   }
 }

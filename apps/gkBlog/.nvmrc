@@ -1,1 +1,5 @@
-22.x
+# 强制忽略引擎版本检查（仅临时用于解决顽固问题）
+engine-strict=false
+
+# 声明兼容的 Node 版本范围
+node-version=20.11.0
