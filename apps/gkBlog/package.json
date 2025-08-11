@@ -78,7 +78,6 @@
     "tsconfig": "workspace:*",
     "typescript": "^5.8.3"
   },
-  {
   "pnpm": {
     "overrides": {
       "@typescript-eslint/eslint-plugin": "7.18.0",
@@ -92,6 +91,4 @@
       "eslint": "8.57.0"
     }
   }
-}
-
 }
