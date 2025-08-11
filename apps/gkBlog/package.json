@@ -2,6 +2,11 @@
   "name": "gkBlog",
   "version": "2.2",
   "private": true,
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "packageManager": "pnpm@10.10.0",
   "scripts": {
     "dev": "next dev",
     "build": "next build --no-lint",

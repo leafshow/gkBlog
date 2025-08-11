@@ -1,6 +1,5 @@
 {
   "installCommand": "pnpm install",
   "buildCommand": "pnpm build --filter gkBlog",
-  "outputDirectory": ".next",
-  "packageManager": "pnpm@10.10.0"
+  "outputDirectory": ".next"
 }
