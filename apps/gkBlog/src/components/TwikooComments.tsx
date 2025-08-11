@@ -74,6 +74,7 @@ const TwikooComments = () => {
 
   // 手动重试初始化
   const handleRetry = () => {
+    if (initializationStatus === "loading") return; // 正在加载时不重复触发
     setInitializationStatus("idle");
     initializeComments();
   };
