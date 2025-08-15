@@ -1,5 +1,5 @@
 {
-  "name": "gkBlog",
+  "name": "gkBpnpm store prunepnpm store prunelog",
   "private": true,
   "scripts": {
     "build": "turbo run build",

@@ -2,4 +2,4 @@
 engine-strict=false
 
 # 声明兼容的 Node 版本范围
-node-version=20.11.0
+node-version=20.x
