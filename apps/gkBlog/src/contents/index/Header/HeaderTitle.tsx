@@ -8,7 +8,7 @@ import {
 import Image from "next/image";
 import { useEffect, useRef } from "react";
 
-// 动画配置 - 提取为独立配置便于维护
+// 动画配置
 const animation = {
   hide: { x: -32, opacity: 0 },
   show: {
@@ -27,7 +27,7 @@ const animation = {
 };
 
 const HeaderTitle = () => {
-  // 动画控制器 - 为每个动画元素创建独立控制器，避免相互影响
+  // 动画控制器
   const emojiControls = useAnimationControls();
   const titleControls = useAnimationControls();
   const subtitleControls = useAnimationControls();
@@ -35,7 +35,7 @@ const HeaderTitle = () => {
   // 跟踪动画是否已触发
   const animationTriggered = useRef(false);
 
-  // 获取滚动位置用于触发动画
+  // 获取滚动位置
   const { scrollY } = useScroll();
 
   // 图片加载完成后触发emoji动画
@@ -65,14 +65,14 @@ const HeaderTitle = () => {
     try {
       console.log("开始标题动画序列");
 
-      // 标题动画 - 0.2秒延迟
+      // 主标题动画
       await titleControls.start({
         ...animation.show,
         transition: { ...animation.show.transition, delay: 0.2 },
       });
       console.log("主标题动画完成");
 
-      // 副标题动画 - 0.3秒延迟
+      // 副标题动画
       await subtitleControls.start({
         ...animation.show,
         transition: { ...animation.show.transition, delay: 0.3 },
@@ -80,7 +80,7 @@ const HeaderTitle = () => {
       console.log("副标题动画完成");
     } catch (error) {
       console.error("标题动画执行失败:", error);
-      // 失败时重试一次
+      // 失败时重试
       setTimeout(() => {
         titleControls.start(animation.show);
         subtitleControls.start(animation.show);
@@ -88,29 +88,28 @@ const HeaderTitle = () => {
     }
   };
 
-  // 自动触发动画的逻辑
+  // 自动触发动画的逻辑（修复类型错误版本）
   useEffect(() => {
-    // 方法1: 组件挂载后立即触发
+    // 方法1: 组件挂载后延迟触发
     const timer = setTimeout(() => {
       console.log("组件挂载后触发动画");
       triggerTitleAnimations();
     }, 100);
 
-    // 方法2: 监听滚动事件 - 当元素进入视图时触发
-    const unsubscribeScroll = useMotionValueEvent(scrollY, "change", (y) => {
-      // 当页面滚动到一定位置（50px）时触发
+    // 方法2: 监听滚动事件（无需手动取消，Framer Motion内部处理）
+    useMotionValueEvent(scrollY, "change", (y) => {
       if (y < 50) {
         triggerTitleAnimations();
       }
     });
 
+    // 清理函数（仅清除定时器）
     return () => {
       clearTimeout(timer);
-      unsubscribeScroll();
     };
-  }, [scrollY]);
+  }, [scrollY, triggerTitleAnimations]);
 
-  // 手动触发动画的方法（用于调试和备用）
+  // 手动触发动画
   const handleManualTrigger = () => {
     console.log("手动触发动画");
     triggerTitleAnimations();
@@ -120,8 +119,8 @@ const HeaderTitle = () => {
   return (
     <div
       className="relative"
-      onClick={handleManualTrigger} // 点击区域任意位置都可触发动画
-      style={{ minHeight: "200px" }} // 确保有足够的点击区域
+      onClick={handleManualTrigger}
+      style={{ minHeight: "200px" }}
     >
       {/* 调试信息 - 生产环境可移除 */}
       <div className="fixed top-4 right-4 bg-black/70 text-white px-3 py-1 text-sm rounded-md z-50">
