@@ -1,6 +1,5 @@
 {
   "installCommand": "pnpm install",
-  // 让 --filter 直接作用于 pnpm，筛选工作区后执行 build 脚本
   "buildCommand": "pnpm build --filter gkBlog",
   "outputDirectory": ".next"
 }
