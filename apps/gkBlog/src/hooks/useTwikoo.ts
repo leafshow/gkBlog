@@ -43,7 +43,7 @@ declare global {
 
 // 多CDN源配置（优先国内稳定源）
 const TWIKOO_SOURCES = [
-  "/assets/js/twikoo.min.js", // 相对路径根据实际存放位置调整
+  "../assets/js/twikoo.min.js", // 相对路径根据实际存放位置调整
   "https://cdnjs.cloudflare.com/ajax/libs/twikoo/1.6.39/twikoo.min.js", // 新增源
   "https://unpkg.com/twikoo@1.6.39/dist/twikoo.min.js", // unpkg备用
   "https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.min.js", // 国外备用CDN
@@ -149,7 +149,8 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
 
     // 开始加载（从第一个源开始）
     loadFromSource(0);
-
+    console.log(`尝试加载本地文件: ${currentSource}`);
+    console.log(`完整URL: ${window.location.origin}${currentSource}`);
     // 组件卸载时清理
     return () => {
       setIsLoadingScript(false);
