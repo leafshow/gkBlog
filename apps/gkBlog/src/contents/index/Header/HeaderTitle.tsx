@@ -10,7 +10,7 @@ const animation = {
   },
 };
 
-const HeaderTitle = () => {
+function HeaderTitle() {
   const controls = useAnimationControls();
 
   return (
@@ -70,9 +70,9 @@ const HeaderTitle = () => {
         >
           I&apos;m{" "}
           <strong className={clsx("text-accent-600", "dark:text-accent-500")}>
-            Liye
+            qlAD
           </strong>{" "}
-          张,{" "}
+          乔,{" "}
         </m.span>
         <m.h1
           className={clsx(
@@ -84,14 +84,14 @@ const HeaderTitle = () => {
           animate={animation.show}
           transition={{ delay: 0.3 }}
         >
-          <span className={clsx("lowercase")}>以</span>{" "}
+          <span className={clsx("lowercase")}>做</span>{" "}
           <strong
             className={clsx(
               "font-bold text-lg text-slate-700",
               "dark:text-slate-300"
             )}
           >
-            积极阳光的心态
+            技术的黑客心态
           </strong>{" "}
           <span>加上</span>{" "}
           <strong
@@ -100,13 +100,13 @@ const HeaderTitle = () => {
               "dark:text-slate-300"
             )}
           >
-            持续学习与自我迭代的行动力
+            开放共进的态度
           </strong>{" "}
-          <span className={clsx("block")}>是成长和成功的先决条件！</span>
+          <span className={clsx("block")}>是成长和越过高山幽谷的秘籍！</span>
         </m.h1>
       </span>
     </div>
   );
-};
+}
 
 export default HeaderTitle;

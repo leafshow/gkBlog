@@ -22,7 +22,7 @@ function getDefaultLayout(page: ReactElement): ReactNode {
   return <WithNavigationFooter>{page}</WithNavigationFooter>;
 }
 
-const App = ({ Component, pageProps, router }: AppPropsWithLayout) => {
+function App({ Component, pageProps, router }: AppPropsWithLayout) {
   let getLayout;
 
   if (router.query.simpleLayout) {
@@ -43,6 +43,6 @@ const App = ({ Component, pageProps, router }: AppPropsWithLayout) => {
       </RootLayout>
     </Provider>
   );
-};
+}
 
 export default App;

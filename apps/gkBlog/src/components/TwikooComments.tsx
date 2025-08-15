@@ -2,7 +2,7 @@ import { useEffect } from "react";
 
 import useTwikoo from "@/hooks/useTwikoo";
 
-const TwikooComments = () => {
+function TwikooComments() {
   const { twikooLoaded, initTwikoo } = useTwikoo();
 
   useEffect(() => {
@@ -12,6 +12,6 @@ const TwikooComments = () => {
   }, [twikooLoaded, initTwikoo]);
 
   return <div id="tcomment" />;
-};
+}
 
 export default TwikooComments;

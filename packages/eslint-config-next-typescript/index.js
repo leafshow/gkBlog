@@ -1,6 +1,6 @@
 /** @type {import('eslint').Linter.Config} */
 module.exports = {
-  plugins: ["@typescript-eslint", "simple-import-sort", "react", "import"],
+  plugins: ["@typescript-eslint", "simple-import-sort"],
   extends: [
     "airbnb",
     "airbnb-typescript",
@@ -11,91 +11,45 @@ module.exports = {
     "prettier",
   ],
   parser: "@typescript-eslint/parser",
-  parserOptions: {
-    project: "./tsconfig.json",
-    tsconfigRootDir: __dirname,
-  },
-  settings: {
-    "import/resolver": {
-      typescript: {
-        project: "./tsconfig.json",
-      },
-    },
-    react: {
-      version: "detect",
-    },
-  },
   rules: {
-    // Next.js 特定规则
-    "@next/next/no-html-link-for-pages": ["error", "apps/gkBlog/src/pages"],
-    "@next/next/no-img-element": "off", // 允许使用原生 img 标签
-    
-    // 允许特定的下划线变量
-    "no-underscore-dangle": ["error", { allow: ["_id", "_count", "_sum"] }],
-    
-    // 导入规则优化
-    "import/extensions": [
-      "error",
-      "ignorePackages",
-      {
-        ts: "never",
-        tsx: "never",
-        js: "never",
-        jsx: "never",
-      },
-    ],
-    "import/no-unresolved": "off", // 让 TypeScript 处理未解析的导入
-    "import/order": "off", // 使用 simple-import-sort 替代
+    "@next/next/no-html-link-for-pages": ["error", "apps/gkBlog/src/pages/"],
+    "no-underscore-dangle": ["error", { allow: ["_count", "_sum"] }],
+    "import/extensions": "off",
+    "import/order": "off",
     "import/prefer-default-export": "off",
-    
-    // 导入排序规则
     "simple-import-sort/exports": "warn",
     "simple-import-sort/imports": [
       "warn",
       {
         groups: [
-          // 外部依赖
+          // Packages and side effect imports.
           ["^@?\\w", "^\\u0000"],
-          // 内部组件和提供者
+          // Components and providers.
           ["^@/components", "^@/providers"],
-          // 钩子
+          // Hooks
           ["^@/hooks"],
-          // 工具和库
+          // Utils, helpers, and lib
           ["^@/utils", "^@/helpers", "^@/lib"],
-          // 其他内部模块
+          // Other absolute imports.
           ["^@/"],
-          // 相对路径
+          // Relative imports.
           ["^\\."],
-          // 类型导入
+          // Import type and types.
           ["^.*\\u0000$", "^@/types"],
-          // 样式文件
+          // Styles.
           ["^.+\\.s?css$"],
+          // Anything not matched in another group.
+          ["^"],
         ],
       },
     ],
-    
-    // React 规则调整
-    "react/function-component-definition": [
-      "error",
-      { namedComponents: "arrow-function" },
-    ],
-    "react/require-default-props": "off", // 使用 TypeScript 类型替代
+    "react/require-default-props": ["error", { functions: "defaultArguments" }],
     "react/jsx-props-no-spreading": [
-    "error",
-    {
-      html: "ignore", // 只保留支持的选项
-      exceptions: [],
+      "error",
+      {
+        html: "ignore",
       },
     ],
-    "react/jsx-filename-extension": [
-      "error",
-      { extensions: [".tsx", ".jsx"] },
-    ],
-    
-    // TypeScript 规则
-    "@typescript-eslint/no-unused-vars": ["warn", { argsIgnorePattern: "^_" }],
-    "@typescript-eslint/explicit-function-return-type": "off",
-    "@typescript-eslint/no-explicit-any": "off", // 可以根据需要调整
   },
   ignorePatterns: [
     ".next",

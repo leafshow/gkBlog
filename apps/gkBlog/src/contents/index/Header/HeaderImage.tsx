@@ -29,7 +29,7 @@ function RotatingModel({ onHover, onHoverEnd }: RotatingModelProps) {
       const smoothSpeed = lerp(
         rotationSpeed,
         targetRotationSpeed,
-        Math.min(elapsedTime / 2, 1)
+        Math.min(elapsedTime / 2, 1),
       );
       modelRef.current.rotation.y += smoothSpeed;
       setRotationSpeed(smoothSpeed);
@@ -106,7 +106,7 @@ function HeaderImage() {
       <div
         className={clsx(
           "from-accent-400/20 via-accent-400/0 absolute top-0 right-0 h-[590px] w-[375px] rounded-full bg-gradient-to-t",
-          "dark:from-accent-600/10 dark:via-accent-600/0"
+          "dark:from-accent-600/10 dark:via-accent-600/0",
         )}
       >
         <div className={clsx("absolute right-0 bottom-0 overflow-hidden")}>

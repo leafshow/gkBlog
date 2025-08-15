@@ -6,9 +6,9 @@
   "main": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
   "scripts": {
+    "build": "tsup --env.NODE_ENV production",
     "dev": "tsup --watch",
-    "lint": "eslint src",
-    "build": "tsup src/index.ts --format esm --dts --env.NODE_ENV production"
+    "lint": "eslint src"
   },
   "dependencies": {
     "rehype-katex": "^7.0.1",
@@ -19,7 +19,6 @@
     "eslint-config-typescript": "workspace:*",
     "tsconfig": "workspace:*",
     "tsup": "^8.4.0",
-    "typescript": "5.8.3",
     "unified": "^11.0.5"
   }
 }

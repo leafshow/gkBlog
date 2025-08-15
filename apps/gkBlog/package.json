@@ -1,5 +1,5 @@
 {
-  "name": "gkBlog",
+  "name": "gkblog",
   "version": "2.2",
   "private": true,
   "scripts": {
@@ -73,6 +73,6 @@
     "typescript": "^5.8.3"
   },
   "engines": {
-    "node": ">=20.11.0 <21"
+    "node": "^18.0.0"
   }
 }

@@ -10,8 +10,7 @@ import PostPreview from "@/contents/blog/PostPreview";
 
 import type { TPostFrontMatter } from "@/types";
 
-// 1. 变量名改为复数形式，明确是数组
-const PINNED_POSTS = ["how-i-built-my-blog", "Celebrity-Quotations"];
+const PINNED_POST = "how-i-built-my-blog";
 const POSTS_PER_PAGE = 10;
 
 export type BlogContentsProps = {
@@ -28,13 +27,12 @@ type TPostPreview = TPostFrontMatter & {
   cover?: string;
 };
 
-const BlogContents = ({ posts }: BlogContentsProps) => {
+function BlogContents({ posts }: BlogContentsProps) {
   const { data } = useContentMeta();
   const router = useRouter();
   const [currentPage, setCurrentPage] = useState(1);
 
-  // 2. 将单个变量改为数组，存储所有置顶文章
-  const pinnedPosts: TPostPreview[] = [];
+  let pinnedPost: TPostPreview;
   const postsPreview: Array<TPostPreview> = [];
 
   posts.forEach(({ slug, frontMatter }) => {
@@ -48,18 +46,12 @@ const BlogContents = ({ posts }: BlogContentsProps) => {
       ...frontMatter,
     };
 
-    // 3. 使用 includes 检查是否为置顶文章
-    if (PINNED_POSTS.includes(slug)) {
-      pinnedPosts.push(preview);
+    if (slug === PINNED_POST) {
+      pinnedPost = preview;
     } else {
       postsPreview.push(preview);
     }
   });
-
-  // 4. 可选：按日期排序置顶文章（最新的在前）
-  pinnedPosts.sort(
-    (a, b) => new Date(b.date).getTime() - new Date(a.date).getTime()
-  );
 
   const totalPages = Math.ceil(postsPreview.length / POSTS_PER_PAGE);
   const startIndex = (currentPage - 1) * POSTS_PER_PAGE;
@@ -151,10 +143,8 @@ const BlogContents = ({ posts }: BlogContentsProps) => {
 
         {/* 主内容 */}
         <div className={clsx("flex-1")}>
-          {/* 5. 循环渲染所有置顶文章 */}
-          {pinnedPosts.map((post) => (
+          {pinnedPost && (
             <div
-              key={post.slug}
               className={clsx(
                 "mb-8 flex items-start gap-4",
                 "md:mb-12 md:gap-6"
@@ -163,20 +153,20 @@ const BlogContents = ({ posts }: BlogContentsProps) => {
               <div className={clsx("flex-1")}>
                 <PostPreview
                   pinned
-                  slug={post.slug}
-                  category={post.category}
-                  title={post.title}
-                  description={post.description}
-                  date={post.date}
-                  lang={post.lang}
-                  tags={post.tags}
-                  views={post.views}
-                  shares={post.shares}
-                  cover={post.cover}
+                  slug={pinnedPost.slug}
+                  category={pinnedPost.category}
+                  title={pinnedPost.title}
+                  description={pinnedPost.description}
+                  date={pinnedPost.date}
+                  lang={pinnedPost.lang}
+                  tags={pinnedPost.tags}
+                  views={pinnedPost.views}
+                  shares={pinnedPost.shares}
+                  cover={pinnedPost.cover}
                 />
               </div>
             </div>
-          ))}
+          )}
 
           {currentPosts.map(
             ({
@@ -249,6 +239,6 @@ const BlogContents = ({ posts }: BlogContentsProps) => {
       </div>
     </div>
   );
-};
+}
 
 export default BlogContents;
