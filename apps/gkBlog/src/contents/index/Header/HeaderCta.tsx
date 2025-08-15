@@ -22,91 +22,86 @@ interface ButtonContactMeProps {
   onMouseLeave: () => void;
 }
 
-function ButtonContactMe({ onMouseEnter, onMouseLeave }: ButtonContactMeProps) {
-  return (
-    <Link
-      href="mailto:qlad_adgk@163.com"
+const ButtonContactMe = ({
+  onMouseEnter,
+  onMouseLeave,
+}: ButtonContactMeProps) => (
+  <Link
+    href="mailto:qlad_adgk@163.com"
+    className={clsx(
+      "button button--solid min-w-[128px]",
+      "shadow",
+      "md:button--big"
+    )}
+    onMouseEnter={onMouseEnter}
+    onMouseLeave={onMouseLeave}
+  >
+    联系我
+  </Link>
+);
+
+const ChangeColor = () => (
+  <div>
+    <button
+      type="button"
       className={clsx(
-        "button button--solid min-w-[128px]",
+        "button button--solid",
         "shadow",
-        "md:button--big",
+        "md:button--big md:my-0 md:inline-block"
       )}
-      onMouseEnter={onMouseEnter}
-      onMouseLeave={onMouseLeave}
     >
-      联系我
-    </Link>
-  );
-}
+      <AccentDemo />
+    </button>
+  </div>
+);
 
-function ChangeColor() {
-  return (
-    <div>
-      <button
-        type="button"
+const ButtonResume = () => (
+  <Link
+    rel="noreferrer nofollow"
+    href="/about-me"
+    className={clsx("button button--ghost px-2", "md:button--big md:px-2")}
+  >
+    <DocumentIcon className={clsx("h-5 w-5")} />
+    关于我
+  </Link>
+);
+
+const AvailableForHire = () => (
+  <div
+    className={clsx(
+      "button button--ghost text-accent-500 pointer-events-none gap-2.5 px-2.5",
+      "md:button--big md:px-2.5",
+      "dark:text-accent-400"
+    )}
+  >
+    <span className={clsx("relative flex h-2 w-2")}>
+      <span
         className={clsx(
-          "button button--solid",
-          "shadow",
-          "md:button--big md:my-0 md:inline-block",
+          "bg-accent-600 absolute -top-1 -left-1 inline-flex h-4 w-4 animate-ping rounded-full opacity-75",
+          "dark:bg-accent-300"
         )}
-      >
-        <AccentDemo />
-      </button>
-    </div>
-  );
-}
-
-function ButtonResume() {
-  return (
-    <Link
-      rel="noreferrer nofollow"
-      href="/about-me"
-      className={clsx("button button--ghost px-2", "md:button--big md:px-2")}
-    >
-      <DocumentIcon className={clsx("h-5 w-5")} />
-      关于我
-    </Link>
-  );
-}
-
-function AvailableForHire() {
-  return (
-    <div
-      className={clsx(
-        "button button--ghost text-accent-500 pointer-events-none gap-2.5 px-2.5",
-        "md:button--big md:px-2.5",
-        "dark:text-accent-400",
-      )}
-    >
-      <span className={clsx("relative flex h-2 w-2")}>
-        <span
-          className={clsx(
-            "bg-accent-600 absolute -top-1 -left-1 inline-flex h-4 w-4 animate-ping rounded-full opacity-75",
-            "dark:bg-accent-300",
-          )}
-        />
-        <span
-          className={clsx(
-            "bg-accent-500 relative inline-flex h-2 w-2 rounded-full",
-            "dark:bg-accent-400",
-          )}
-        />
-      </span>
-      当前在线
-    </div>
-  );
-}
+      />
+      <span
+        className={clsx(
+          "bg-accent-500 relative inline-flex h-2 w-2 rounded-full",
+          "dark:bg-accent-400"
+        )}
+      />
+    </span>
+    当前在线
+  </div>
+);
 
 interface HeaderCtaProps {
   isFree?: boolean;
   isFreeAnimationDuration?: number;
 }
 
-function HeaderCta({
+const HeaderCta = ({
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   isFree = true,
   isFreeAnimationDuration = 4,
-}: HeaderCtaProps) {
+}: HeaderCtaProps) => {
   const shouldReduceMotion = useReducedMotion();
   const [hovered, setHovered] = useState(false);
   const [isAvailableVisible, setIsAvailableVisible] = useState(true);
@@ -206,6 +201,6 @@ function HeaderCta({
       </m.div>
     </>
   );
-}
+};
 
 export default HeaderCta;
