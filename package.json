@@ -1,5 +1,5 @@
 {
-  "name": "gkBlog",
+  "name": "gkblog",
   "private": true,
   "scripts": {
     "build": "turbo run build",
