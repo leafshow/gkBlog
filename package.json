@@ -2,13 +2,12 @@
   "name": "gkBlog",
   "private": true,
   "scripts": {
-    // 修正：直接执行 Next.js 构建，同时支持 Turbo 调度
     "build": "next build --no-lint",
-    "dev": "next dev",  // 修正：直接启动 Next.js 开发服务器（原 "turbo run dev --parallel" 会循环调用）
-    "lint": "next lint",  // 修正：使用 Next.js 自带的 lint 命令
-    "clean": "turbo run clean",  // 保留：清理命令可继续使用 Turbo
+    "dev": "next dev",
+    "lint": "next lint",
+    "clean": "turbo run clean",
     "format": "prettier --write .",
-    "start": "next start"  // 修正：直接启动 Next.js 生产服务器
+    "start": "next start"
   },
   "devDependencies": {
     "@next/eslint-plugin-next": "15.3.3",
