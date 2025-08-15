@@ -1,15 +1,10 @@
 {
-  "name": "gkBlog",
+  "name": "gkblog",
   "version": "2.2",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
-  "packageManager": "pnpm@10.10.0",
   "scripts": {
     "dev": "next dev",
-    "build": "next build --no-lint",
+    "build": "next build",
     "start": "next start",
     "lint": "next lint",
     "lint:all": "concurrently \"yarn:lint\" \"yarn:lint:types\" \"yarn:lint:style\"",
@@ -17,18 +12,17 @@
     "lint:style": "prettier --check .",
     "analyze": "cross-env ANALYZE=true yarn build",
     "postbuild": "next-sitemap",
-    "db:generate": "prisma generate",
-    "postinstall": "prisma generate"
+    "db:generate": "prisma generate"
   },
   "dependencies": {
     "@headlessui/react": "^2.2.2",
     "@headlessui/tailwindcss": "^0.2.2",
     "@mdx-js/loader": "^3.1.0",
     "@mdx-js/react": "^3.1.0",
-    "@next/bundle-analyzer": "15.3.3",
-    "@next/mdx": "15.3.3",
-    "@next/third-parties": "15.3.3",
-    "@prisma/client": "^6.9.0",
+    "@next/bundle-analyzer": "^15.3.1",
+    "@next/mdx": "^15.3.1",
+    "@next/third-parties": "^15.3.1",
+    "@prisma/client": "^6.7.0",
     "@react-three/drei": "^10.0.7",
     "@react-three/fiber": "^9.1.2",
     "@shadcn/ui": "^0.0.4",
@@ -40,7 +34,7 @@
     "front-matter": "^4.0.2",
     "jsonata": "^2.0.6",
     "lodash": "^4.17.21",
-    "next": "15.3.3",
+    "next": "^15.3.1",
     "next-themes": "^0.4.6",
     "react": "^19.1.0",
     "react-dom": "^19.1.0",
@@ -62,28 +56,23 @@
     "@types/lodash": "^4.17.16",
     "@types/mdx": "^2.0.13",
     "@types/node": "18.19.95",
-    "@types/react": "19.1.8",
-    "@types/react-dom": "19.1.6",
+    "@types/react": "^19.1.3",
+    "@types/react-dom": "^19.1.3",
     "@types/slug": "^5.0.9",
-    "@typescript-eslint/eslint-plugin": "*",
-    "@typescript-eslint/parser": "7.18.0",
     "autoprefixer": "^10.4.21",
     "concurrently": "^9.1.2",
     "cross-env": "^7.0.3",
-    "eslint": "8.57.0",
     "eslint-config-next-typescript": "workspace:*",
-    "eslint-plugin-react": "7.34.3",
-    "eslint-plugin-react-hooks": "4.6.2",
     "mini-svg-data-uri": "^1.4.4",
     "next-sitemap": "^4.2.3",
     "postcss": "^8.5.3",
     "postcss-import": "^16.1.0",
-    "prisma": "^6.9.0",
+    "prisma": "^6.7.0",
     "tailwindcss": "^3.4.17",
     "tsconfig": "workspace:*",
     "typescript": "^5.8.3"
   },
   "engines": {
-    "node": "=20.11.0"
+    "node": ">=20.11.0 <21"
   }
 }
