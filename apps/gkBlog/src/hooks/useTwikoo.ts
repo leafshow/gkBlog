@@ -44,6 +44,7 @@ declare global {
 // 多CDN源配置（优先国内稳定源）
 const TWIKOO_SOURCES = [
   "/assets/js/twikoo.min.js", // 相对路径根据实际存放位置调整
+  "https://cdnjs.cloudflare.com/ajax/libs/twikoo/1.6.39/twikoo.min.js", // 新增源
   "https://unpkg.com/twikoo@1.6.39/dist/twikoo.min.js", // unpkg备用
   "https://cdn.jsdelivr.net/npm/twikoo@1.6.39/dist/twikoo.min.js", // 国外备用CDN
 ];
@@ -90,7 +91,7 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
       if (sourceIndex >= TWIKOO_SOURCES.length) {
         retryRound++;
         if (retryRound < maxRetries) {
-          const delay = 1000 * Math.pow(2, retryRound - 1); // 指数退避
+          const delay = 1000 * 2 ** (retryRound - 1); // 指数退避
           console.warn(
             `所有CDN源尝试失败，将在 ${delay}ms 后进行第 ${retryRound + 1} 轮重试`
           );
