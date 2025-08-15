@@ -1,5 +1,5 @@
 {
   "installCommand": "pnpm install",
-  "buildCommand": "pnpm build --filter gkBlog",
+  "buildCommand": "pnpm --filter gkBlog build",
   "outputDirectory": ".next"
 }
