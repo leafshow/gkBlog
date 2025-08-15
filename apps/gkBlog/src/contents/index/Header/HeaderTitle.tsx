@@ -1,131 +1,20 @@
 import clsx from "clsx";
-import {
-  m,
-  useAnimationControls,
-  useMotionValueEvent,
-  useScroll,
-} from "framer-motion";
+import { m, useAnimationControls } from "framer-motion";
 import Image from "next/image";
-import { useEffect, useRef } from "react";
 
-// 动画配置
 const animation = {
   hide: { x: -32, opacity: 0 },
   show: {
     x: 0,
     opacity: 1,
-    transition: {
-      type: "tween",
-      ease: "easeOut",
-      duration: 0.6,
-    },
-  },
-  emoji: {
-    hidden: { opacity: 0, y: 16, rotate: 30 },
-    visible: { opacity: 1, y: 0, rotate: 0 },
   },
 };
 
 const HeaderTitle = () => {
-  // 动画控制器
-  const emojiControls = useAnimationControls();
-  const titleControls = useAnimationControls();
-  const subtitleControls = useAnimationControls();
-
-  // 跟踪动画是否已触发
-  const animationTriggered = useRef(false);
-
-  // 获取滚动位置
-  const { scrollY } = useScroll();
-
-  // 关键修复：将useMotionValueEvent移至组件顶层（符合React Hook调用规则）
-  useMotionValueEvent(scrollY, "change", (y) => {
-    if (y < 50 && !animationTriggered.current) {
-      console.log("滚动位置触发动画");
-      triggerTitleAnimations();
-    }
-  });
-
-  // 图片加载完成后触发emoji动画
-  const handleImageLoad = async () => {
-    try {
-      console.log("图片加载完成，开始emoji动画");
-      await emojiControls.start({
-        ...animation.emoji.visible,
-        transition: {
-          type: "spring",
-          delay: 0.35,
-          bounce: 0.7,
-          duration: 0.7,
-        },
-      });
-      console.log("emoji动画完成");
-    } catch (error) {
-      console.error("emoji动画执行失败:", error);
-    }
-  };
-
-  // 触发所有标题动画
-  const triggerTitleAnimations = async () => {
-    if (animationTriggered.current) return;
-    animationTriggered.current = true;
-
-    try {
-      console.log("开始标题动画序列");
-
-      // 主标题动画
-      await titleControls.start({
-        ...animation.show,
-        transition: { ...animation.show.transition, delay: 0.2 },
-      });
-      console.log("主标题动画完成");
-
-      // 副标题动画
-      await subtitleControls.start({
-        ...animation.show,
-        transition: { ...animation.show.transition, delay: 0.3 },
-      });
-      console.log("副标题动画完成");
-    } catch (error) {
-      console.error("标题动画执行失败:", error);
-      // 失败时重试
-      setTimeout(() => {
-        titleControls.start(animation.show);
-        subtitleControls.start(animation.show);
-      }, 1000);
-    }
-  };
-
-  // 组件挂载后延迟触发动画
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      console.log("组件挂载后触发动画");
-      triggerTitleAnimations();
-    }, 100);
-
-    return () => {
-      clearTimeout(timer);
-    };
-  }, [triggerTitleAnimations]);
-
-  // 手动触发动画（备用）
-  const handleManualTrigger = () => {
-    console.log("手动触发动画");
-    triggerTitleAnimations();
-    emojiControls.start(animation.emoji.visible);
-  };
+  const controls = useAnimationControls();
 
   return (
-    <div
-      className="relative"
-      onClick={handleManualTrigger}
-      style={{ minHeight: "200px" }}
-    >
-      {/* 调试信息 - 生产环境可移除 */}
-      <div className="fixed top-4 right-4 bg-black/70 text-white px-3 py-1 text-sm rounded-md z-50">
-        动画状态: {animationTriggered.current ? "已触发" : "未触发"}
-      </div>
-
+    <div>
       <m.div
         className={clsx(
           "mb-1 flex items-center gap-1 text-2xl text-slate-600",
@@ -133,18 +22,24 @@ const HeaderTitle = () => {
           "dark:text-slate-400"
         )}
         initial={animation.hide}
-        animate={titleControls}
+        animate={animation.show}
+        transition={{ delay: 0.1 }}
       >
         嗨!
         <m.div
-          initial={animation.emoji.hidden}
-          animate={emojiControls}
+          initial={{
+            opacity: 0,
+            y: 16,
+            rotate: 30,
+            transformOrigin: "right center",
+          }}
+          animate={controls}
           transition={{
             type: "spring",
+            delay: 0.35,
             bounce: 0.7,
             duration: 0.7,
           }}
-          style={{ transformOrigin: "right center" }}
         >
           <Image
             className={clsx("w-7 md:w-10")}
@@ -152,13 +47,17 @@ const HeaderTitle = () => {
             src="/assets/emojis/love-you-gesture.png"
             width={48}
             height={48}
-            onLoad={handleImageLoad}
-            onError={(e) => console.error("图片加载失败:", e)}
+            onLoad={() => {
+              controls.start({
+                opacity: 1,
+                y: 0,
+                rotate: 0,
+              });
+            }}
             priority
           />
         </m.div>
       </m.div>
-
       <span className={clsx("text-slate-700", "dark:text-slate-300")}>
         <m.span
           className={clsx(
@@ -166,7 +65,8 @@ const HeaderTitle = () => {
             "md:mb-6 md:text-7xl"
           )}
           initial={animation.hide}
-          animate={titleControls}
+          animate={animation.show}
+          transition={{ delay: 0.2 }}
         >
           I&apos;m{" "}
           <strong className={clsx("text-accent-600", "dark:text-accent-500")}>
@@ -174,15 +74,15 @@ const HeaderTitle = () => {
           </strong>{" "}
           张,{" "}
         </m.span>
-
         <m.h1
           className={clsx(
             "block text-base text-slate-600",
             "md:text-xl",
-            "dark:text-slate-300"
+            "dark:text-slate-400"
           )}
           initial={animation.hide}
-          animate={subtitleControls}
+          animate={animation.show}
+          transition={{ delay: 0.3 }}
         >
           <span className={clsx("lowercase")}>以</span>{" "}
           <strong
@@ -205,14 +105,6 @@ const HeaderTitle = () => {
           <span className={clsx("block")}>是成长和成功的先决条件！</span>
         </m.h1>
       </span>
-
-      {/* 手动触发按钮 - 生产环境可隐藏 */}
-      <button
-        className="mt-4 px-4 py-2 bg-accent-600 text-white rounded-md text-sm hover:bg-accent-700 transition-colors"
-        onClick={handleManualTrigger}
-      >
-        手动触发动画 (调试用)
-      </button>
     </div>
   );
 };
