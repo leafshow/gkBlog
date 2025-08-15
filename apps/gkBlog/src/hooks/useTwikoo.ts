@@ -106,6 +106,9 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
       }
 
       const currentSource = TWIKOO_SOURCES[sourceIndex];
+      // 将日志移到这里，currentSource在此作用域内
+      console.log(`尝试加载: ${currentSource}`);
+      console.log(`完整URL: ${window.location.origin}${currentSource}`);
       console.log(`尝试从CDN加载: ${currentSource}`);
 
       script = document.createElement("script");
@@ -149,8 +152,7 @@ function useTwikoo(options?: { envId?: string }): UseTwikooReturn {
 
     // 开始加载（从第一个源开始）
     loadFromSource(0);
-    console.log(`尝试加载本地文件: ${currentSource}`);
-    console.log(`完整URL: ${window.location.origin}${currentSource}`);
+
     // 组件卸载时清理
     return () => {
       setIsLoadingScript(false);
