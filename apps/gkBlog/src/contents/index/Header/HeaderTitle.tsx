@@ -38,6 +38,14 @@ const HeaderTitle = () => {
   // 获取滚动位置
   const { scrollY } = useScroll();
 
+  // 关键修复：将useMotionValueEvent移至组件顶层（符合React Hook调用规则）
+  useMotionValueEvent(scrollY, "change", (y) => {
+    if (y < 50 && !animationTriggered.current) {
+      console.log("滚动位置触发动画");
+      triggerTitleAnimations();
+    }
+  });
+
   // 图片加载完成后触发emoji动画
   const handleImageLoad = async () => {
     try {
@@ -88,28 +96,19 @@ const HeaderTitle = () => {
     }
   };
 
-  // 自动触发动画的逻辑（修复类型错误版本）
+  // 组件挂载后延迟触发动画
   useEffect(() => {
-    // 方法1: 组件挂载后延迟触发
     const timer = setTimeout(() => {
       console.log("组件挂载后触发动画");
       triggerTitleAnimations();
     }, 100);
 
-    // 方法2: 监听滚动事件（无需手动取消，Framer Motion内部处理）
-    useMotionValueEvent(scrollY, "change", (y) => {
-      if (y < 50) {
-        triggerTitleAnimations();
-      }
-    });
-
-    // 清理函数（仅清除定时器）
     return () => {
       clearTimeout(timer);
     };
-  }, [scrollY, triggerTitleAnimations]);
+  }, [triggerTitleAnimations]);
 
-  // 手动触发动画
+  // 手动触发动画（备用）
   const handleManualTrigger = () => {
     console.log("手动触发动画");
     triggerTitleAnimations();
