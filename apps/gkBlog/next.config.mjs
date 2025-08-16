@@ -1,7 +1,12 @@
 import bundleAnalyzer from "@next/bundle-analyzer";
 import nextMDX from "@next/mdx";
-import rehypePlugins from "rehype-plugins";
-import remarkPlugins from "remark-plugins";
+
+// 导入具体的 remark 和 rehype 插件（根据安装的插件调整）
+import remarkGfm from "remark-gfm";
+import remarkFrontmatter from "remark-frontmatter";
+import rehypeHighlight from "rehype-highlight";
+import rehypeSlug from "rehype-slug";
+import rehypeAutolinkHeadings from "rehype-autolink-headings";
 
 /** @type {import('next').NextConfig} */
 const nextConfig = {
@@ -19,8 +24,9 @@ const withBundleAnalyzer = bundleAnalyzer({
 const withMDX = nextMDX({
   extension: /\.mdx?$/,
   options: {
-    remarkPlugins: remarkPlugins.plugins,
-    rehypePlugins: rehypePlugins.plugins,
+    // 直接使用具体插件（替换原有的 plugins 引用）
+    remarkPlugins: [remarkGfm, remarkFrontmatter], // 根据需求添加
+    rehypePlugins: [rehypeHighlight, rehypeSlug, rehypeAutolinkHeadings], // 根据需求添加
     providerImportSource: "@mdx-js/react",
   },
 });

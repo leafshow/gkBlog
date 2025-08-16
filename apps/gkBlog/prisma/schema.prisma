@@ -7,22 +7,36 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+// 枚举定义必须放在引用它们的模型之前
+enum ContentType {
+  PAGE
+  POST
+  PROJECT
+}
+
+enum ShareType {
+  TWITTER
+  CLIPBOARD
+  OTHERS
+}
+
+enum ReactionType {
+  CLAPPING
+  THINKING
+  AMAZED
+}
+
+// 模型定义在枚举之后
 model ContentMeta {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  type      ContentType
+  type      ContentType  // 现在能正确识别枚举
   title     String
   slug      String     @unique
   views     View[]
   shares    Share[]
   reactions Reaction[]
   createdAt DateTime   @default(now())
-}
-
-enum ContentType {
-  PAGE
-  POST
-  PROJECT
 }
 
 model View {
@@ -38,7 +52,7 @@ model View {
 model Share {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
-  type      ShareType? @default(OTHERS)
+  type      ShareType? @default(OTHERS)  // 正确识别 ShareType
   createdAt DateTime   @default(now())
   sessionId String
 
@@ -46,27 +60,15 @@ model Share {
   content   ContentMeta @relation(fields: [contentId], references: [id], onDelete: Cascade)
 }
 
-enum ShareType {
-  TWITTER
-  CLIPBOARD
-  OTHERS
-}
-
 model Reaction {
   id String @id @default(auto()) @map("_id") @db.ObjectId
 
   count     Int?          @default(1)
   section   String?
-  type      ReactionType? @default(CLAPPING)
+  type      ReactionType? @default(CLAPPING)  // 正确识别 ReactionType
   createdAt DateTime      @default(now())
   sessionId String
 
   contentId String      @db.ObjectId
   content   ContentMeta @relation(fields: [contentId], references: [id], onDelete: Cascade)
-}
-
-enum ReactionType {
-  CLAPPING
-  THINKING
-  AMAZED
 }
