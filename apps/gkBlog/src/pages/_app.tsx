@@ -23,24 +23,21 @@ function getDefaultLayout(page: ReactElement): ReactNode {
 }
 
 function App({ Component, pageProps, router }: AppPropsWithLayout) {
-  let getLayout;
+  // 确定布局函数
+  const getLayout = router.query.simpleLayout
+    ? (page: ReactElement) => <main>{page}</main>
+    : Component.getLayout || getDefaultLayout;
 
-  if (router.query.simpleLayout) {
-    getLayout = (page: ReactElement) => <main>{page}</main>;
-  } else if (Component.getLayout) {
-    getLayout = Component.getLayout;
-  } else {
-    getLayout = getDefaultLayout;
-  }
+  // 使用布局函数包装页面内容
+  const pageContent = getLayout(<Component {...pageProps} />);
 
   const isProduction = process.env.NODE_ENV === "production";
 
   return (
     <Provider>
       <RootLayout>
-        {/* 禁用属性扩展检查，因为pageProps需要传递给页面组件 */}
-        // eslint-disable-next-line react/jsx-props-no-spreading
-        <Component {...pageProps} />
+        {/* 渲染带布局的页面内容 */}
+        {pageContent}
         {isProduction && <BaiDuAnalytics />}
         {isProduction && <ClarityAnalytics />}
       </RootLayout>
