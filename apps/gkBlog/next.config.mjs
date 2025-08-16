@@ -39,8 +39,7 @@ const configWithCors = {
     // 尝试添加协议无关的格式
     "172.29.236.158",
     "172.29.236.158:3000",
-    // 允许的开发环境来源
-  ],
+    ]// 允许的开发环境来源
 };
 
 export default configWithCors;
