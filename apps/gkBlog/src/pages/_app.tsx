@@ -28,15 +28,17 @@ function App({ Component, pageProps, router }: AppPropsWithLayout) {
     ? (page: ReactElement) => <main>{page}</main>
     : Component.getLayout || getDefaultLayout;
 
-  // 使用布局函数包装页面内容
-  const pageContent = getLayout(<Component {...pageProps} />);
+  // 使用布局函数包装页面内容，添加ESLint注释禁用属性扩展检查
+  const pageContent = getLayout(
+    // eslint-disable-next-line react/jsx-props-no-spreading
+    <Component {...pageProps} />
+  );
 
   const isProduction = process.env.NODE_ENV === "production";
 
   return (
     <Provider>
       <RootLayout>
-        {/* 渲染带布局的页面内容 */}
         {pageContent}
         {isProduction && <BaiDuAnalytics />}
         {isProduction && <ClarityAnalytics />}
