@@ -2,9 +2,12 @@
   "name": "gkBlog",
   "version": "2.2",
   "private": true,
+  "prisma": {
+    "schema": "./prisma/schema.prisma"
+  },
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "prisma generate && next build",
     "start": "next start",
     "lint": "next lint",
     "lint:all": "concurrently \"pnpm:lint\" \"pnpm:lint:types\" \"pnpm:lint:style\"",
