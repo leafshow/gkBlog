@@ -38,7 +38,9 @@ function App({ Component, pageProps, router }: AppPropsWithLayout) {
   return (
     <Provider>
       <RootLayout>
-        {getLayout(<Component {...pageProps} />)}
+        {/* 禁用属性扩展检查，因为pageProps需要传递给页面组件 */}
+        // eslint-disable-next-line react/jsx-props-no-spreading
+        <Component {...pageProps} />
         {isProduction && <BaiDuAnalytics />}
         {isProduction && <ClarityAnalytics />}
       </RootLayout>
