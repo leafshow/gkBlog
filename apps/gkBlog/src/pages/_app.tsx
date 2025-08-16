@@ -33,13 +33,14 @@ function App({ Component, pageProps, router }: AppPropsWithLayout) {
     getLayout = getDefaultLayout;
   }
 
+  const isProduction = process.env.NODE_ENV === "production";
+
   return (
     <Provider>
       <RootLayout>
-        {/* eslint-disable-next-line react/jsx-props-no-spreading */}
         {getLayout(<Component {...pageProps} />)}
-        <BaiDuAnalytics />
-        <ClarityAnalytics />
+        {isProduction && <BaiDuAnalytics />}
+        {isProduction && <ClarityAnalytics />}
       </RootLayout>
     </Provider>
   );
