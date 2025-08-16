@@ -53,7 +53,7 @@ urls=$(cat urls_bing.txt | jq -R . | jq -s .)
 json_payload=$(jq -n \
     --arg host "www.qladgk.com" \
     --arg key "$BING_API_KEY" \
-    --arg keyLocation "https://www.qladgk.com/$BING_API_KEY.txt" \
+    --arg keyLocation "https://gkblog.xiaodoudou.vip/$BING_API_KEY.txt" \
     --argjson urlList "$urls" \
     '{host: $host, key: $key, keyLocation: $keyLocation, urlList: $urlList}')
 

@@ -12,7 +12,7 @@
 
 <div align="center">
 
-✨在线预览：<https://www.qladgk.com> ✨
+✨在线预览：<https://gkblog.xiaodoudou.vip> ✨
 
 </div>
 
@@ -216,7 +216,7 @@ flowchart TB
 
 ### 🌐 运行架构
 
-- **国内**：阿里云 Docker 容器、ESA [https://www.qladgk.com](https://www.qladgk.com)
+- **国内**：阿里云 Docker 容器、ESA [https://gkblog.xiaodoudou.vip](https://gkblog.xiaodoudou.vip)
 - **国外**：Vercel [https://gkblog.vercel.app](https://gkblog.vercel.app)
 
 ---
